@@ -28,7 +28,7 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'canvas/ambient01.png',
+        src: 'window-content/ambient01.png',
         alt: 'Placeholder image: a marigold photographed at close range, out of focus',
         caption: 'Fig. 01 — Placeholder. A source chosen for how it behaves, not what it depicts.',
       },
@@ -43,13 +43,13 @@ export default [
     layout: 'two-up',
     images: [
       {
-        src: 'canvas/ambient02.png',
+        src: 'window-content/ambient02.png',
         alt: 'Placeholder image: overlapping brush strokes in high contrast',
         caption: 'Fig. 02 — Placeholder. Line weight and negative space, ready to be mapped.',
         align: 'top',
       },
       {
-        src: 'canvas/coritakent.png',
+        src: 'window-content/coritakent.png',
         alt: 'Placeholder image: Corita Kent holding a camera to her eye',
         caption: 'Fig. 03 — Placeholder. Corita Kent, finding the frame before the print.',
         align: 'bottom',
@@ -65,7 +65,7 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'canvas/ambient03.png',
+        src: 'window-content/ambient03.png',
         alt: 'Placeholder image: a shaft of light falling over sand dunes',
         caption: 'Fig. 04 — Placeholder. Scale decides register: mass low, filigree high.',
       },

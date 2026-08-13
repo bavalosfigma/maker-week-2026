@@ -26,7 +26,7 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'canvas/coritakent.png',
+        src: 'window-content/coritakent.png',
         alt: 'Placeholder image: Corita Kent holding a camera to her eye',
         caption: 'Fig. 01 — Placeholder. Looking harder at what is already in front of you.',
       },
@@ -41,13 +41,13 @@ export default [
     layout: 'two-up',
     images: [
       {
-        src: 'canvas/plant.png',
+        src: 'window-content/plant.png',
         alt: 'Placeholder image: a sansevieria photographed from above',
         caption: 'Fig. 02 — Placeholder. An ordinary object, catalogued.',
         align: 'top',
       },
       {
-        src: 'canvas/ambient01.png',
+        src: 'window-content/ambient01.png',
         alt: 'Placeholder image: a marigold photographed at close range, out of focus',
         caption: 'Fig. 03 — Placeholder. The same object, held closer.',
         align: 'center',
@@ -63,7 +63,7 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'canvas/ambient02.png',
+        src: 'window-content/ambient02.png',
         alt: 'Placeholder image: overlapping brush strokes in high contrast',
         caption: 'Fig. 04 — Placeholder. Sources shown, not hidden.',
       },
