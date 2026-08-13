@@ -97,6 +97,22 @@ body {
   transform: translateY(0);
 }
 
+.article-panel-enter-active {
+  transition: transform var(--window-enter-duration) var(--window-ease-enter);
+}
+
+.article-panel-leave-active {
+  transition: transform var(--window-leave-duration) var(--window-ease-leave);
+}
+
+.article-panel-enter-from {
+  transform: translateY(100vh);
+}
+
+.article-panel-leave-to {
+  transform: translateY(-100%);
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;
@@ -108,13 +124,27 @@ body {
   background-size: 128px 128px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .article-window__panel .window-close,
+.article-panel .window-close,
 .ambient-window .window-close {
   transition: opacity 0.2s ease;
 }
 
 @media (hover: hover) {
   .article-window__panel:not(:hover):not(:focus-within) .window-close,
+  .article-panel:not(:hover):not(:focus-within) .window-close,
   .ambient-window:not(:hover):not(:focus-within) .window-close {
     opacity: 0;
     pointer-events: none;
