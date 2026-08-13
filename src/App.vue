@@ -94,9 +94,9 @@ function openBook03() {
       @click="openBook01"
     />
     <CanvasItem
-      :left="1270"
-      :top="1208"
-      :width="250"
+      :left="1228"
+      :top="1228"
+      :width="300"
       :hover="false"
       :src="assetUrl('canvas/pencils.png')"
       alt="Pencils"
