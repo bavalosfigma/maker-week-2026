@@ -18,14 +18,14 @@ defineEmits(['click'])
 <style scoped>
 .window-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 4px;
+  right: 4px;
   z-index: 2;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   padding: 0;
-  border: none;
-  background: #000;
+  border: 0px solid #000;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -42,9 +42,9 @@ defineEmits(['click'])
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 12px;
-  height: 1.5px;
-  background: #fff;
+  width: 16px;
+  height: 1px;
+  background: #000;
   transform-origin: center;
 }
 

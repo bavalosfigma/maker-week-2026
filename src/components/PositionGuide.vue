@@ -132,7 +132,6 @@ onUnmounted(endDrag)
   z-index: 100;
   border: 1px solid var(--color-blue);
   background: rgb(0 182 255 / 6%);
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 40%);
   cursor: grab;
   touch-action: none;
 }
@@ -180,7 +179,6 @@ onUnmounted(endDrag)
   font-weight: 600;
   color: #1a1a1a;
   white-space: nowrap;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
 }
 
 .position-guide__copy {

@@ -4,6 +4,7 @@ import { marked } from 'marked'
 import { getArticle } from '../articles/index.js'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
+import { playCloseBlip } from '../composables/useBlipSound.js'
 import WindowCloseButton from './WindowCloseButton.vue'
 
 const props = defineProps({
@@ -73,6 +74,7 @@ function randomizePosition() {
 }
 
 function close() {
+  playCloseBlip()
   open.value = false
 }
 
@@ -131,8 +133,18 @@ onUnmounted(() => {
           class="article-window__content"
           :style="contentStyle"
           @scroll="updateScrollProgress"
-          v-html="articleHtml"
-        />
+        >
+          <p
+            v-if="article.eyebrow"
+            class="article-window__eyebrow"
+          >
+            {{ article.eyebrow }}
+          </p>
+          <div
+            class="article-window__body"
+            v-html="articleHtml"
+          />
+        </div>
         <div
           class="article-window__progress"
           aria-hidden="true"
@@ -153,7 +165,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: var(--window-shadow);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;

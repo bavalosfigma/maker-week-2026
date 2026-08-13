@@ -3,7 +3,6 @@
     class="canvas-item"
     :class="{
       'canvas-item--no-hover': !hover,
-      'canvas-item--table-shadow': tableShadow,
     }"
     :style="positionStyle"
     @click="$emit('click', $event)"
@@ -62,10 +61,6 @@ const props = defineProps({
   rotate: {
     type: Number,
     default: 0,
-  },
-  tableShadow: {
-    type: Boolean,
-    default: false,
   },
 })
 

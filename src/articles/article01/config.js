@@ -3,6 +3,7 @@ import content from './content.md?raw'
 export default {
   id: 'article01',
   title: 'The Productive Shock of Context',
+  eyebrow: 'principle 01',
   content,
   theme: {
     background: 'var(--color-yellow)',

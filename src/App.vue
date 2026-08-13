@@ -7,6 +7,8 @@ import CanvasItem from './components/CanvasItem.vue'
 import HeaderLogos from './components/HeaderLogos.vue'
 import RecordPlayer from './components/RecordPlayer.vue'
 import { provideWindowStack } from './composables/useWindowStack.js'
+import { playOpenBlip } from './composables/useBlipSound.js'
+import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
 import { assetUrl } from './utils/assetUrl.js'
 
 const windowStack = provideWindowStack()
@@ -30,6 +32,8 @@ const ambient03Open = ref(false)
 const coritaOpen = ref(false)
 
 function openBook01() {
+  playOpenBlip()
+  maybePlayRecordOnArticleOpen()
   article01Open.value = true
   ambient01Open.value = true
   ambient02Open.value = true
@@ -43,6 +47,8 @@ function openBook01() {
 }
 
 function openBook03() {
+  playOpenBlip()
+  maybePlayRecordOnArticleOpen()
   article02Open.value = true
   ambient03Open.value = true
 
@@ -81,7 +87,6 @@ function openBook03() {
       :top="sc(1470)"
       :width="sc(200)"
       :rotate="-4"
-      table-shadow
       :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
@@ -90,7 +95,6 @@ function openBook03() {
       :top="sc(1500)"
       :width="sc(200)"
       :rotate="3"
-      table-shadow
       :src="assetUrl('canvas/collage02.png')"
       alt="Collage 02"
     />
@@ -99,7 +103,6 @@ function openBook03() {
       :top="sc(1629)"
       :width="sc(200)"
       :rotate="-3"
-      table-shadow
       :src="assetUrl('canvas/collage03.png')"
       alt="Collage 03"
     />
@@ -146,7 +149,7 @@ function openBook03() {
     window-id="ambient01"
     :src="assetUrl('canvas/ambient01.png')"
     alt="Ambient texture"
-    :width="200"
+    :width="400"
   />
   <AmbientWindow
     v-model:open="ambient02Open"

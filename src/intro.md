@@ -1,0 +1,1 @@
+a gentle manifesto to notice, begin, continue; daily attention over speed, play over perfection; take what helps, share learning, welcome surprise.

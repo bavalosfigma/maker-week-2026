@@ -242,7 +242,6 @@ onUnmounted(() => {
   background: rgb(255 255 255 / 90%);
   font-size: 12px;
   color: #444;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   pointer-events: none;
 }
 

@@ -3,6 +3,7 @@ import content from './content.md?raw'
 export default {
   id: 'article02',
   title: 'Make What You Know',
+  eyebrow: 'principle 02',
   content,
   theme: {
     background: 'var(--color-green)',

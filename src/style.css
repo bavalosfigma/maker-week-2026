@@ -9,6 +9,9 @@
 
 html {
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 html,
@@ -31,8 +34,7 @@ body {
   transition: opacity 0.55s ease-out;
 }
 
-.canvas-item:hover,
-.record-player--selected {
+.canvas-item:hover {
   z-index: 10;
 }
 
@@ -40,16 +42,8 @@ body {
   opacity: 0.18;
 }
 
-.canvas-surface:has(.record-player--selected) .canvas-item:not(.record-player--selected):not(:hover) {
-  opacity: 0.18;
-}
-
 .canvas-item--no-hover {
   cursor: default;
-}
-
-.canvas-item--table-shadow {
-  filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 30%));
 }
 
 .window-zen-enter-active {

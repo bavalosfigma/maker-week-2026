@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
+import { playCloseBlip } from '../composables/useBlipSound.js'
 import WindowCloseButton from './WindowCloseButton.vue'
 
 const props = defineProps({
@@ -57,6 +58,7 @@ function onImageLoad(event) {
 }
 
 function close() {
+  playCloseBlip()
   open.value = false
 }
 
@@ -118,7 +120,6 @@ onUnmounted(() => {
 .ambient-window {
   position: fixed;
   overflow: hidden;
-  box-shadow: var(--window-shadow);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;
