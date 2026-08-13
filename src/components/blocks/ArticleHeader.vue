@@ -23,22 +23,13 @@ defineProps({
 
 <template>
   <header class="article-header">
-    <p
-      v-if="eyebrow"
-      class="article-header__eyebrow type-h3"
-    >
+    <p v-if="eyebrow" class="article-header__eyebrow type-h3">
       <NumeralBadge :value="eyebrow" />
     </p>
-    <h1
-      :id="titleId || undefined"
-      class="article-header__title type-h1"
-    >
+    <h1 :id="titleId || undefined" class="article-header__title type-h1">
       {{ title }}
     </h1>
-    <p
-      v-if="credit"
-      class="article-header__credit type-caption-mono"
-    >
+    <p v-if="credit" class="article-header__credit type-caption-mono">
       {{ credit }}
     </p>
   </header>

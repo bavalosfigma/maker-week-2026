@@ -31,28 +31,12 @@ function imageAlignment(align) {
 </script>
 
 <template>
-  <div
-    class="article-figure"
-    :class="`article-figure--${layout}`"
-  >
-    <figure
-      v-for="(image, index) in images"
-      :key="image.src || index"
-      class="article-figure__item"
-      :class="`article-figure__item--${imageAlignment(image.align)}`"
-    >
-      <img
-        class="article-figure__image"
-        :class="{ 'image-treatment': duotone }"
-        :src="imageUrl(image.src)"
-        :alt="image.alt || ''"
-        loading="lazy"
-        decoding="async"
-      >
-      <figcaption
-        v-if="image.caption"
-        class="article-figure__caption type-caption-mono"
-      >
+  <div class="article-figure" :class="`article-figure--${layout}`">
+    <figure v-for="(image, index) in images" :key="image.src || index" class="article-figure__item"
+      :class="`article-figure__item--${imageAlignment(image.align)}`">
+      <img class="article-figure__image" :class="{ 'image-treatment': duotone }" :src="imageUrl(image.src)"
+        :alt="image.alt || ''" loading="lazy" decoding="async">
+      <figcaption v-if="image.caption" class="article-figure__caption type-caption-mono">
         {{ image.caption }}
       </figcaption>
     </figure>
