@@ -3,31 +3,27 @@ defineEmits(['click'])
 </script>
 
 <template>
-  <button
-    type="button"
-    class="window-close"
-    @click="$emit('click', $event)"
-  >
-    <span
-      class="window-close__icon"
-      aria-hidden="true"
-    />
+  <button type="button" class="window-close" @click="$emit('click', $event)">
+    <span class="window-close__icon" aria-hidden="true" />
   </button>
 </template>
 
 <style scoped>
 .window-close {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 8px;
+  right: 8px;
   z-index: 2;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0px solid #000;
-  background: #fff;
+  background: #00000032;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
   outline: none;
+  border-radius: 50%;
 }
 
 .window-close:focus,
@@ -48,9 +44,9 @@ defineEmits(['click'])
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 16px;
+  width: 12px;
   height: 1px;
-  background: #000;
+  background: #ffffff;
   transform-origin: center;
 }
 

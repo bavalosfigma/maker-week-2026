@@ -77,7 +77,7 @@ export const IMAGE_CROPS = {
   'stencil.png': {
     imageWidth: 1161,
     imageHeight: 924,
-    crop: { left: 45, top: 40, width: 1083, height: 855 },
+    crop: { left: 53, top: 42, width: 1070, height: 850 },
   },
   'tape.png': {
     imageWidth: 672,

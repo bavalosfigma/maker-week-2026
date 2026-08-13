@@ -1,6 +1,6 @@
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { provideWindowStack } from './useWindowStack.js'
-import { playOpenBlip } from './useBlipSound.js'
+import { playCloseBlip, playOpenBlip } from './useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './useRecordAudio.js'
 
 const AMBIENT_STAGGER_MS = 200
@@ -30,6 +30,16 @@ export function useCanvasScene() {
     ambientTimeouts.length = 0
   }
 
+  const article01Ambients = [
+    { windowId: 'ambient01', openRef: ambient01Open },
+    { windowId: 'ambient02', openRef: ambient02Open },
+  ]
+
+  const article02Ambients = [
+    { windowId: 'ambient03', openRef: ambient03Open },
+    { windowId: 'animation01', openRef: animation01Open },
+  ]
+
   function staggerAmbientOpens(entries) {
     entries.forEach(({ windowId, openRef }, index) => {
       const timeoutId = window.setTimeout(() => {
@@ -44,16 +54,23 @@ export function useCanvasScene() {
     })
   }
 
+  function staggerAmbientCloses(entries) {
+    entries.forEach(({ openRef }, index) => {
+      const timeoutId = window.setTimeout(() => {
+        openRef.value = false
+      }, AMBIENT_STAGGER_MS * index)
+
+      ambientTimeouts.push(timeoutId)
+    })
+  }
+
   function openArticle01() {
     playOpenBlip()
     maybePlayRecordOnArticleOpen()
     clearAmbientTimeouts()
     article01Open.value = true
 
-    staggerAmbientOpens([
-      { windowId: 'ambient01', openRef: ambient01Open },
-      { windowId: 'ambient02', openRef: ambient02Open },
-    ])
+    staggerAmbientOpens(article01Ambients)
   }
 
   function openArticle02() {
@@ -62,11 +79,34 @@ export function useCanvasScene() {
     clearAmbientTimeouts()
     article02Open.value = true
 
-    staggerAmbientOpens([
-      { windowId: 'ambient03', openRef: ambient03Open },
-      { windowId: 'animation01', openRef: animation01Open },
-    ])
+    staggerAmbientOpens(article02Ambients)
   }
+
+  function closeActiveArticle() {
+    if (!article01Open.value && !article02Open.value) return
+
+    playCloseBlip()
+    article01Open.value = false
+    article02Open.value = false
+  }
+
+  /*
+   * An article's companion windows belong to that article, so they follow it out
+   * once it has been read past its dismiss line (or closed by hand).
+   */
+  watch(article01Open, (isOpen) => {
+    if (isOpen) return
+
+    clearAmbientTimeouts()
+    staggerAmbientCloses(article01Ambients)
+  })
+
+  watch(article02Open, (isOpen) => {
+    if (isOpen) return
+
+    clearAmbientTimeouts()
+    staggerAmbientCloses(article02Ambients)
+  })
 
   return {
     article01Open,
@@ -77,5 +117,6 @@ export function useCanvasScene() {
     animation01Open,
     openArticle01,
     openArticle02,
+    closeActiveArticle,
   }
 }

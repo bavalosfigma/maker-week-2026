@@ -5,24 +5,36 @@
       'canvas-item--no-hover': !hover || !interactive,
       'canvas-item--decorative': !interactive,
       'canvas-item--cropped': !!croppedLayout,
+      'canvas-item--selected': selected,
     }"
     :style="positionStyle"
     @click="onClick"
   >
-    <img
+    <div
       v-if="src"
-      :src="src"
-      :alt="alt"
-      class="canvas-item__image"
-      :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
-      :style="imageStyle"
+      class="canvas-item__frame"
     >
+      <img
+        :src="src"
+        :alt="alt"
+        class="canvas-item__image"
+        :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
+        :style="imageStyle"
+      >
+    </div>
     <slot v-else />
+    <NumeralBadge
+      v-if="badge"
+      :value="badge"
+      class="canvas-item__badge"
+      :style="badgeStyle"
+    />
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import NumeralBadge from './NumeralBadge.vue'
 import { getCroppedLayout, getImageCrop } from '../utils/imageCrops.js'
 
 const props = defineProps({
@@ -66,7 +78,23 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  selected: {
+    type: Boolean,
+    default: false,
+  },
   rotate: {
+    type: Number,
+    default: 0,
+  },
+  badge: {
+    type: [String, Number],
+    default: null,
+  },
+  badgeTop: {
+    type: Number,
+    default: 0,
+  },
+  badgeLeft: {
     type: Number,
     default: 0,
   },
@@ -75,9 +103,11 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 function onClick(event) {
-  if (props.interactive) {
-    emit('click', event)
-  }
+  if (!props.interactive) return
+
+  // Keep the open-click from bubbling into the locked canvas dismiss handler.
+  event.stopPropagation()
+  emit('click', event)
 }
 
 const imageCrop = computed(() => getImageCrop(props.src))
@@ -89,6 +119,11 @@ const croppedLayout = computed(() => {
 })
 
 const imageStyle = computed(() => croppedLayout.value?.imageStyle)
+
+const badgeStyle = computed(() => ({
+  top: `${props.badgeTop}px`,
+  left: `${props.badgeLeft}px`,
+}))
 
 const positionStyle = computed(() => {
   const size = croppedLayout.value
@@ -130,7 +165,13 @@ const positionStyle = computed(() => {
 </script>
 
 <style scoped>
-.canvas-item--cropped {
+.canvas-item__frame {
+  width: 100%;
+  height: 100%;
+}
+
+/* Clipping lives on the frame so overlays like the badge can sit outside it. */
+.canvas-item--cropped .canvas-item__frame {
   overflow: hidden;
 }
 
@@ -156,5 +197,21 @@ const positionStyle = computed(() => {
 
 .canvas-item__image--auto-height {
   height: auto;
+}
+
+.canvas-item__badge {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+  transition:
+    opacity var(--window-enter-duration) var(--window-ease-enter),
+    background-color 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+
+.canvas-item:not(.canvas-item--decorative):hover .canvas-item__badge {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
 }
 </style>

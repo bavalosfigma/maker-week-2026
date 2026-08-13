@@ -54,8 +54,20 @@ body {
   z-index: 10;
 }
 
-.canvas-surface:has(.canvas-item:not(.canvas-item--decorative):hover) .canvas-item:not(.canvas-item--decorative):not(:hover) {
+/* Hovering a clickable item fades the rest of the canvas, props included. */
+.canvas-surface:has(.canvas-item:not(.canvas-item--decorative):hover) .canvas-item:not(:hover),
+.canvas-surface--locked .canvas-item:not(.canvas-item--selected) {
   opacity: 0.18;
+}
+
+/* While an article is being read, only the item that opened it stays live. */
+.canvas-surface--locked .canvas-item:not(.canvas-item--selected) {
+  pointer-events: none;
+}
+
+/* Article numerals leave the canvas while a piece is open. */
+.canvas-surface--locked .canvas-item__badge {
+  opacity: 0;
 }
 
 .canvas-item--no-hover,
@@ -73,58 +85,51 @@ body {
   -webkit-user-drag: none;
 }
 
+/*
+ * Windows fly in from, and back out to, a random point past the viewport edge.
+ * The heading is handed over per window as --slide-x / --slide-y.
+ */
 .window-zen-enter-active {
-  transition:
-    opacity var(--window-enter-duration) var(--window-ease-enter),
-    transform var(--window-enter-duration) var(--window-ease-enter);
+  transition: transform var(--window-enter-duration) var(--window-ease-enter);
+  will-change: transform;
 }
 
 .window-zen-leave-active {
-  transition:
-    opacity var(--window-leave-duration) var(--window-ease-leave),
-    transform var(--window-leave-duration) var(--window-ease-leave);
+  transition: transform var(--window-leave-duration) var(--window-ease-leave);
+  will-change: transform;
+  pointer-events: none;
 }
 
 .window-zen-enter-from,
 .window-zen-leave-to {
-  opacity: 0;
-  transform: translateY(18px);
+  transform: translate(var(--slide-x, 0px), var(--slide-y, 0px)) rotate(var(--slide-rotate, 0deg));
 }
 
 .window-zen-enter-to,
 .window-zen-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translate(0, 0) rotate(0deg);
 }
 
-.article-panel-enter-active,
-.article-panel-down-enter-active {
+.article-panel-enter-active {
   transition: transform var(--window-enter-duration) var(--window-ease-enter);
 }
 
-.article-panel-leave-active,
-.article-panel-down-leave-active {
+.article-panel-leave-active {
   transition: transform var(--window-leave-duration) var(--window-ease-leave);
 }
 
-.article-panel-enter-from,
-.article-panel-down-enter-from {
+.article-panel-enter-from {
   transform: translateY(100vh) rotate(2deg);
 }
 
 .article-panel-enter-to,
-.article-panel-down-enter-to,
-.article-panel-leave-from,
-.article-panel-down-leave-from {
+.article-panel-leave-from {
   transform: translateY(0) rotate(0deg);
 }
 
+/* Direction and distance are measured off the panel's live geometry on exit. */
 .article-panel-leave-to {
-  transform: translateY(-100%) rotate(-2deg);
-}
-
-.article-panel-down-leave-to {
-  transform: translateY(100vh) rotate(2deg);
+  transform: translateY(var(--panel-exit-y, 100vh)) rotate(var(--panel-exit-rotate, 2deg));
 }
 
 .image-treatment {
@@ -166,25 +171,4 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.article-window__panel .window-close,
-.article-panel .window-close,
-.ambient-window .window-close {
-  transition: opacity 0.2s ease;
-}
-
-@media (hover: hover) {
-  .article-window__panel:not(:hover):not(:focus-within) .window-close,
-  .article-panel:not(:hover):not(:focus-within) .window-close,
-  .ambient-window:not(:hover):not(:focus-within) .window-close {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .article-window__panel--dragging .window-close,
-  .ambient-window--dragging .window-close {
-    opacity: 1;
-    pointer-events: auto;
-  }
 }

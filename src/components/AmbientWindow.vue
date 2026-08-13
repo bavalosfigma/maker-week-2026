@@ -1,10 +1,8 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
-import { playCloseBlip } from '../composables/useBlipSound.js'
-import WindowCloseButton from './WindowCloseButton.vue'
-import WindowCaption from './WindowCaption.vue'
+import { getOffscreenOffset } from '../utils/offscreenSlide.js'
 
 const props = defineProps({
   windowId: {
@@ -47,12 +45,25 @@ const videoEl = ref(null)
 const { zIndex, focusWindow } = useWindowStack(props.windowId)
 const panelPosition = ref({ top: 80, left: 80 })
 const panelHeight = ref(props.width)
+const slideOffset = ref({ x: 0, y: 0, rotate: 0 })
 const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(panelPosition, {
   onDragStart: focusWindow,
 })
 
-const closeLabel = computed(() => `Close ${props.alt || 'image'}`)
-const captionLabel = computed(() => props.caption || props.alt || props.windowId)
+const slideStyle = computed(() => ({
+  '--slide-x': `${slideOffset.value.x}px`,
+  '--slide-y': `${slideOffset.value.y}px`,
+  '--slide-rotate': `${slideOffset.value.rotate}deg`,
+}))
+
+function randomizeSlideOffset(position) {
+  slideOffset.value = getOffscreenOffset({
+    left: position.left,
+    top: position.top,
+    width: props.width,
+    height: panelHeight.value,
+  })
+}
 
 function randomRange(min, max) {
   return min + Math.random() * Math.max(0, max - min)
@@ -78,6 +89,7 @@ function randomizePosition() {
     top: Math.min(maxTop, Math.max(inset, top)),
     left: Math.min(maxLeft, Math.max(minLeft, left)),
   }
+  randomizeSlideOffset(panelPosition.value)
   snapPosition()
 }
 
@@ -116,17 +128,6 @@ function syncVideoPlayback(shouldPlay) {
   }
 }
 
-function close() {
-  playCloseBlip()
-  open.value = false
-}
-
-function onKeyDown(event) {
-  if (event.key === 'Escape' && open.value) {
-    close()
-  }
-}
-
 watch(open, (isOpen) => {
   if (isOpen) {
     randomizePosition()
@@ -135,15 +136,10 @@ watch(open, (isOpen) => {
     return
   }
 
+  // Runs before the leave transition renders, so the exit heading is fresh
+  // whether the window was closed by hand or alongside its article.
+  randomizeSlideOffset(displayPosition.value)
   syncVideoPlayback(false)
-})
-
-onMounted(() => {
-  window.addEventListener('keydown', onKeyDown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', onKeyDown)
 })
 </script>
 
@@ -155,8 +151,8 @@ onUnmounted(() => {
         left: `${displayPosition.left}px`,
         width: `${width}px`,
         zIndex: zIndex,
+        ...slideStyle,
       }" @mouseenter="focusWindow" @pointerdown="startDrag">
-        <WindowCloseButton :aria-label="closeLabel" @click="close" />
         <video v-if="video" ref="videoEl" class="ambient-window__image" :src="src" :aria-label="alt" autoplay loop muted
           playsinline @loadedmetadata="onVideoMetadata" />
         <img v-else class="ambient-window__image" :src="src" :alt="alt" draggable="false" @load="onImageLoad">
@@ -186,7 +182,7 @@ onUnmounted(() => {
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 45%),
     inset 0 0 28px rgb(122 112 92 / 12%),
-    0 2px 10px rgb(0 0 0 / 8%);
+    var(--window-shadow);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;

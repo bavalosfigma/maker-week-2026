@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import AmbientWindow from '../components/AmbientWindow.vue'
 import ArticleWindow from '../components/ArticleWindow.vue'
 import Canvas from '../components/Canvas.vue'
@@ -6,6 +7,7 @@ import CanvasItem from '../components/CanvasItem.vue'
 import HeaderLogos from '../components/HeaderLogos.vue'
 import ImageEffects from '../components/ImageEffects.vue'
 import RecordPlayer from '../components/RecordPlayer.vue'
+import { getArticle, getArticleEyebrow } from '../articles/index.js'
 import { useAppPreloader } from '../composables/useAppPreloader.js'
 import { useCanvasScene } from '../composables/useCanvasScene.js'
 import { assetUrl } from '../utils/assetUrl.js'
@@ -23,7 +25,10 @@ const {
   animation01Open,
   openArticle01,
   openArticle02,
+  closeActiveArticle,
 } = useCanvasScene()
+
+const articleOpen = computed(() => article01Open.value || article02Open.value)
 
 const CANVAS_CENTER = CANVAS_SIZE / 2
 const RECORD_SIZE = 640
@@ -31,19 +36,23 @@ const recordCrop = getImageCrop('canvas/record.png')
 const recordLayout = getCroppedLayout(recordCrop, RECORD_SIZE)
 const recordLeft = CANVAS_CENTER - recordLayout.containerWidth / 2
 const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
+const article01Badge = getArticleEyebrow(getArticle('article01'))
+const article02Badge = getArticleEyebrow(getArticle('article02'))
 </script>
 
 <template>
   <ImageEffects />
   <div class="preloader" :class="{ 'preloader--hidden': isReady }" aria-hidden="true" />
   <div class="app-shell" :class="{ 'app-shell--ready': isReady }">
-    <HeaderLogos />
-    <Canvas>
+    <HeaderLogos :closable="articleOpen" @close="closeActiveArticle" />
+    <Canvas :locked="articleOpen" @dismiss="closeActiveArticle">
       <RecordPlayer :left="recordLeft" :top="recordTop" :size="RECORD_SIZE" />
       <CanvasItem :left="1430" :top="800" :width="480" :src="assetUrl('canvas/collage.png')"
-        alt="Collage of cut paper and printed fragments" @click="openArticle01" />
+        alt="Collage of cut paper and printed fragments" :badge="article02Badge" :selected="article02Open"
+        @click="article02Open ? closeActiveArticle() : openArticle02()" />
       <CanvasItem :left="100" :top="810" :width="460" :src="assetUrl('canvas/stencil.png')"
-        alt="Lettering stencil sheet" @click="openArticle02" />
+        alt="Lettering stencil sheet" :badge="article01Badge" :badge-top="-44" :selected="article01Open"
+        @click="article01Open ? closeActiveArticle() : openArticle01()" />
       <CanvasItem :left="760" :top="400" :width="420" :rotate="-4" :interactive="false"
         :src="assetUrl('canvas/pencil.png')" alt="Pencil" />
       <CanvasItem :left="540" :top="320" :width="62" :rotate="9" :interactive="false"

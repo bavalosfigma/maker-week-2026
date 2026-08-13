@@ -10,6 +10,10 @@
   --font-sans: 'Figma Sans VF', system-ui, -apple-system, sans-serif;
   --font-mono: 'Figma Mono VF', ui-monospace, monospace;
 
+  --window-shadow:
+    0 1px 2px rgb(0 0 0 / 10%),
+    0 4px 10px rgb(0 0 0 / 14%);
+
   --window-ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --window-ease-leave: cubic-bezier(0.4, 0, 0.6, 1);
   --window-enter-duration: 0.8s;

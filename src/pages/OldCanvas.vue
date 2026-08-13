@@ -4,6 +4,7 @@
  * drawn from public/old-canvas. Kept as its own scene so the current canvas can
  * keep moving without losing this one.
  */
+import { computed } from 'vue'
 import AmbientWindow from '../components/AmbientWindow.vue'
 import ArticleWindow from '../components/ArticleWindow.vue'
 import Canvas from '../components/Canvas.vue'
@@ -28,7 +29,10 @@ const {
   animation01Open,
   openArticle01,
   openArticle02,
+  closeActiveArticle,
 } = useCanvasScene()
+
+const articleOpen = computed(() => article01Open.value || article02Open.value)
 
 const CANVAS_CENTER = CANVAS_SIZE / 2
 const RECORD_SIZE = 460
@@ -42,11 +46,11 @@ const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
   <ImageEffects />
   <div class="preloader" :class="{ 'preloader--hidden': isReady }" aria-hidden="true" />
   <div class="app-shell" :class="{ 'app-shell--ready': isReady }">
-    <HeaderLogos />
-    <Canvas>
+    <HeaderLogos :closable="articleOpen" @close="closeActiveArticle" />
+    <Canvas :locked="articleOpen" @dismiss="closeActiveArticle">
       <RecordPlayer :left="recordLeft" :top="recordTop" :size="RECORD_SIZE" />
       <CanvasItem :left="1404" :top="849" :width="400" :src="assetUrl('old-canvas/book01.png')"
-        alt="Open book spread" @click="openArticle01" />
+        alt="Open book spread" @click="article01Open ? closeActiveArticle() : openArticle01()" />
       <CanvasItem :left="1288" :top="1288" :width="300" :interactive="false"
         :src="assetUrl('old-canvas/pencils.png')" alt="Pencils" />
       <CanvasItem :left="498" :top="1185" :width="167" :rotate="-4" :interactive="false"
@@ -62,7 +66,7 @@ const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
       <CanvasItem :left="828" :top="1295" :width="333" :src="assetUrl('old-canvas/sketchbook.png')"
         alt="Sketchbook" />
       <CanvasItem :left="133" :top="829" :width="400" :src="assetUrl('old-canvas/book03.png')" alt="Book 03"
-        @click="openArticle02" />
+        @click="article02Open ? closeActiveArticle() : openArticle02()" />
     </Canvas>
     <ArticleWindow v-model:open="article01Open" article-id="article01" />
     <ArticleWindow v-model:open="article02Open" article-id="article02" />

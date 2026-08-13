@@ -29,3 +29,8 @@ export function getArticleTitle(article) {
   const header = article.blocks.find((block) => block.type === 'header')
   return header?.title ?? article.id
 }
+
+export function getArticleEyebrow(article) {
+  const header = article.blocks.find((block) => block.type === 'header')
+  return header?.eyebrow ?? ''
+}

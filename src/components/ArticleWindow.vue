@@ -7,10 +7,10 @@ import { useWindowStack } from '../composables/useWindowStack.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import ArticleBlocks from './blocks/ArticleBlocks.vue'
 import OverlayTexture from './OverlayTexture.vue'
-import WindowCloseButton from './WindowCloseButton.vue'
 import WindowCaption from './WindowCaption.vue'
 
 const DEFAULT_REST_TOP_RATIO = 0.2
+const EXIT_CLEARANCE = 80
 
 const props = defineProps({
   articleId: {
@@ -65,19 +65,33 @@ function announce(message) {
   liveRegionRef.value.textContent = message
 }
 
-const leaveDirection = ref('down')
-
-const transitionName = computed(() => (
-  leaveDirection.value === 'up' ? 'article-panel' : 'article-panel-down'
-))
-
-function close(direction = 'down') {
+function close() {
   if (!open.value) return
 
-  leaveDirection.value = direction
   playCloseBlip()
-  announce(`Closed ${articleTitle.value}`)
   open.value = false
+}
+
+/*
+ * Send the panel out whichever way the reader was already heading: once the
+ * article's midpoint has risen above the middle of the screen it keeps going up,
+ * otherwise it drops back the way it arrived. Those two distances are equal at
+ * exactly that midpoint, so this also happens to always take the shorter way out.
+ *
+ * Measured here rather than in close() because the header and canvas dismiss the
+ * panel by clearing the model directly, and the panel is far taller than the
+ * viewport, so a fixed distance would either park its edge on screen or overshoot.
+ */
+function setExitPath(el) {
+  const { top, height } = el.getBoundingClientRect()
+  const exitsUpward = top + height / 2 < window.innerHeight / 2
+
+  const distance = exitsUpward
+    ? -(top + height + EXIT_CLEARANCE)
+    : window.innerHeight - top + EXIT_CLEARANCE
+
+  el.style.setProperty('--panel-exit-y', `${Math.round(distance)}px`)
+  el.style.setProperty('--panel-exit-rotate', exitsUpward ? '-2deg' : '2deg')
 }
 
 function isScrollActive() {
@@ -94,7 +108,7 @@ const {
   panelRef,
   getRestTop,
   isActive: isScrollActive,
-  onDismiss: () => close('up'),
+  onDismiss: close,
 })
 
 useFocusTrap(panelRef, open)
@@ -107,7 +121,7 @@ function onResize() {
 function onKeyDown(event) {
   if (event.key === 'Escape' && open.value) {
     event.preventDefault()
-    close('down')
+    close()
   }
 }
 
@@ -124,6 +138,7 @@ watch(open, async (isOpen) => {
     return
   }
 
+  announce(`Closed ${articleTitle.value}`)
   detachScroll()
 })
 
@@ -146,12 +161,10 @@ onUnmounted(() => {
 
 <template>
   <Teleport to="body">
-    <Transition :name="transitionName" @after-leave="resetScroll">
+    <Transition name="article-panel" @before-leave="setExitPath" @after-leave="resetScroll">
       <article v-if="open" ref="panelRef" class="article-panel paper-tooth" role="dialog" aria-modal="true"
         :aria-labelledby="titleId" :style="panelStyle" @mouseenter="focusWindow" @pointerdown="focusWindow">
         <p ref="liveRegionRef" class="sr-only" aria-live="polite" aria-atomic="true" />
-
-        <WindowCloseButton :aria-label="`Close ${articleTitle}`" @click="close('down')" />
 
         <!-- <WindowCaption :label="panelCaption" /> -->
 
@@ -202,20 +215,11 @@ onUnmounted(() => {
   background: color-mix(in srgb, var(--panel-fill) var(--vellum-density), transparent);
   backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.92) brightness(1.02);
   -webkit-backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.92) brightness(1.02);
+  box-shadow: var(--window-shadow);
   pointer-events: none;
 }
 
 .article-panel__content {
   flex: 1;
-}
-
-.article-panel :deep(.window-close) {
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.article-panel:hover :deep(.window-close),
-.article-panel :deep(.window-close:focus-visible) {
-  opacity: 1;
 }
 </style>
