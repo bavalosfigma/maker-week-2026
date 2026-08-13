@@ -28,31 +28,40 @@
   text-transform: lowercase;
 }
 
-.article-window__content p {
-  margin: 0 0 1rem;
+.article-window__content .article-window__body :is(p, ul, ol, li) {
   font-size: 1.25rem;
   font-weight: 400;
   line-height: 1.25;
   color: #222;
 }
 
-.article-window__content p:last-child {
+.article-window__content .article-window__body p {
+  margin: 0 0 1rem;
+}
+
+.article-window__content .article-window__body p:last-child {
   margin-bottom: 0;
 }
 
-.article-window__content ul {
+.article-window__content .article-window__body ul,
+.article-window__content .article-window__body ol {
   margin: 0 0 1rem;
   padding-left: 1.25rem;
 }
 
-.article-window__content li {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.65;
-  color: #222;
+.article-window__content .article-window__body ul:last-child,
+.article-window__content .article-window__body ol:last-child {
+  margin-bottom: 0;
 }
 
-.article-window__content li:last-child {
+.article-window__content .article-window__body li {
+  margin: 0 0 0.5rem;
+}
+
+.article-window__content .article-window__body li:last-child {
   margin-bottom: 0;
+}
+
+.article-window__content .article-window__body li p {
+  margin: 0;
 }

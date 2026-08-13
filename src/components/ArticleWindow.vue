@@ -198,4 +198,46 @@ onUnmounted(() => {
   cursor: grabbing;
   user-select: none;
 }
+
+.article-window__body :deep(p),
+.article-window__body :deep(ul),
+.article-window__body :deep(ol),
+.article-window__body :deep(li) {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #222;
+}
+
+.article-window__body :deep(p) {
+  margin: 0 0 1rem;
+}
+
+.article-window__body :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.article-window__body :deep(ul),
+.article-window__body :deep(ol) {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.article-window__body :deep(li) {
+  margin: 0 0 0.5rem;
+}
+
+.article-window__body :deep(li:last-child) {
+  margin-bottom: 0;
+}
+
+.article-window__body :deep(li p) {
+  margin: 0;
+}
+
+.article-window__body :deep(li::marker) {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #222;
+}
 </style>
