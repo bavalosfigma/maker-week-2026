@@ -1,4 +1,9 @@
 <script setup>
+/*
+ * Shared grain layer. Fills its positioned ancestor and blends with whatever
+ * sits beneath it, so the host controls placement via --texture-* properties
+ * rather than this component knowing about canvases or panels.
+ */
 import { onMounted, ref } from 'vue'
 
 const TILE_SIZE = 128
@@ -24,22 +29,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    ref="overlay"
-    class="canvas-texture"
-    aria-hidden="true"
-  />
+  <div ref="overlay" class="overlay-texture" aria-hidden="true" />
 </template>
 
 <style scoped>
-.canvas-texture {
+.overlay-texture {
   position: absolute;
   inset: 0;
-  z-index: 50;
-  opacity: 0.4;
+  z-index: var(--texture-layer, 50);
+  opacity: var(--texture-opacity, 0.1);
   mix-blend-mode: overlay;
   background-repeat: repeat;
-  background-size: 64px 64px;
+  background-size: var(--texture-scale, 64px) var(--texture-scale, 64px);
   pointer-events: none;
 }
 </style>

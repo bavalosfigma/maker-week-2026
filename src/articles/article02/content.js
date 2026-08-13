@@ -41,15 +41,15 @@ export default [
     layout: 'two-up',
     images: [
       {
-        src: 'window-content/plant.png',
-        alt: 'Placeholder image: a sansevieria photographed from above',
-        caption: 'Fig. 02 — Placeholder. An ordinary object, catalogued.',
+        src: 'window-content/collage03.png',
+        alt: 'Placeholder image: torn dark red paper laid over a lilac ground',
+        caption: 'Fig. 02 — Placeholder. Ordinary material, catalogued.',
         align: 'top',
       },
       {
         src: 'window-content/ambient01.png',
         alt: 'Placeholder image: a marigold photographed at close range, out of focus',
-        caption: 'Fig. 03 — Placeholder. The same object, held closer.',
+        caption: 'Fig. 03 — Placeholder. The same looking, held closer.',
         align: 'center',
       },
     ],

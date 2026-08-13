@@ -150,7 +150,7 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <Transition name="window-zen">
-      <div v-if="open" class="ambient-window" :class="{ 'ambient-window--dragging': isDragging }" :style="{
+      <div v-if="open" class="ambient-window paper-tooth" :class="{ 'ambient-window--dragging': isDragging }" :style="{
         top: `${displayPosition.top}px`,
         left: `${displayPosition.left}px`,
         width: `${width}px`,
@@ -174,8 +174,8 @@ onUnmounted(() => {
 .ambient-window {
   --vellum-stock: 250 247 238;
   --vellum-density: 0%;
-  --vellum-diffusion: 1px;
-  --vellum-ink: 1;
+  --vellum-diffusion: 30px;
+  --vellum-ink: .95;
 
   position: fixed;
   padding: 0;
@@ -191,18 +191,6 @@ onUnmounted(() => {
   cursor: grab;
   touch-action: none;
   user-select: none;
-}
-
-/* Paper tooth across the whole sheet, including the bare rim. */
-.ambient-window::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' result='n'/%3E%3CfeColorMatrix in='n' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23v)'/%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  opacity: 0.22;
-  mix-blend-mode: multiply;
-  pointer-events: none;
 }
 
 .ambient-window--dragging {

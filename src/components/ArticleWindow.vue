@@ -6,6 +6,7 @@ import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import ArticleBlocks from './blocks/ArticleBlocks.vue'
+import OverlayTexture from './OverlayTexture.vue'
 import WindowCloseButton from './WindowCloseButton.vue'
 import WindowCaption from './WindowCaption.vue'
 
@@ -48,7 +49,7 @@ function getRestTop() {
 }
 
 const panelStyle = computed(() => ({
-  background: article.value.theme.background,
+  '--panel-fill': article.value.theme.background,
   width: `${panelWidth.value}px`,
   left: `${restLeft.value}px`,
   top: `${restTop.value - scrollOffset.value}px`,
@@ -146,13 +147,15 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <Transition :name="transitionName" @after-leave="resetScroll">
-      <article v-if="open" ref="panelRef" class="article-panel" role="dialog" aria-modal="true"
+      <article v-if="open" ref="panelRef" class="article-panel paper-tooth" role="dialog" aria-modal="true"
         :aria-labelledby="titleId" :style="panelStyle" @mouseenter="focusWindow" @pointerdown="focusWindow">
         <p ref="liveRegionRef" class="sr-only" aria-live="polite" aria-atomic="true" />
 
         <WindowCloseButton :aria-label="`Close ${articleTitle}`" @click="close('down')" />
 
         <!-- <WindowCaption :label="panelCaption" /> -->
+
+        <OverlayTexture />
 
         <div class="article-panel__content" :style="contentStyle">
           <ArticleBlocks :blocks="article.blocks" :title-id="titleId" />
@@ -164,6 +167,18 @@ onUnmounted(() => {
 
 <style scoped>
 .article-panel {
+  /*
+   * Sheet, grain and tooth all stay on negative layers so the content never
+   * forms a stacking context, which would isolate the figures' multiply blend
+   * from the fill behind them.
+   */
+  --vellum-density: 100%;
+  --vellum-diffusion: 48px;
+  --texture-layer: -2;
+  --texture-opacity: 0.3;
+  --tooth-layer: -1;
+  --tooth-opacity: 0.18;
+
   position: fixed;
   top: 20vh;
   display: flex;
@@ -173,6 +188,21 @@ onUnmounted(() => {
   cursor: default;
   touch-action: none;
   will-change: top;
+}
+
+/*
+ * The stock itself, kept off .article-panel so that backdrop-filter isolation
+ * stays confined to this layer rather than affecting the panel's contents.
+ */
+.article-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background: color-mix(in srgb, var(--panel-fill) var(--vellum-density), transparent);
+  backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.92) brightness(1.02);
+  -webkit-backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.92) brightness(1.02);
+  pointer-events: none;
 }
 
 .article-panel__content {
