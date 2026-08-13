@@ -16,8 +16,6 @@ const targetPanX = ref(0)
 const targetPanY = ref(0)
 const basePanX = ref(0)
 const basePanY = ref(0)
-const hoverPanX = ref(0)
-const hoverPanY = ref(0)
 const isPanning = ref(false)
 const guideActive = ref(false)
 const guideInteracting = ref(false)
@@ -53,11 +51,13 @@ function guideSizeText() {
   return size
 }
 
-const PAN_EASE = 0.07
-const DRAG_EASE = 0.18
-const HOVER_PAN_MAX = 16
-const MOMENTUM_FRICTION = 0.9
-const MOMENTUM_MIN = 0.08
+// Drag feel tuning — lower DRAG_EASE = dreamier lag; higher MOMENTUM_FRICTION = longer glide
+const PAN_EASE = 0.05
+const DRAG_EASE = 0.08
+const MOMENTUM_FRICTION = 0.945
+const MOMENTUM_MIN = 0.04
+const MOMENTUM_RELEASE_SCALE = 1.15
+const VELOCITY_SMOOTHING = 0.75
 let panAnimationFrame = null
 let isMomentum = false
 let panVelocityX = 0
@@ -108,16 +108,6 @@ function applyPanTarget() {
   const vh = window.innerHeight
 
   setPanTargets(
-    clampPanValue(basePanX.value + hoverPanX.value, vw),
-    clampPanValue(basePanY.value + hoverPanY.value, vh),
-  )
-}
-
-function applyDragPanTarget() {
-  const vw = window.innerWidth
-  const vh = window.innerHeight
-
-  setPanTargets(
     clampPanValue(basePanX.value, vw),
     clampPanValue(basePanY.value, vh),
   )
@@ -132,8 +122,8 @@ function samplePointerVelocity(event) {
     const nextVelocityX = (event.clientX - lastPointerSample.x) / frameScale
     const nextVelocityY = (event.clientY - lastPointerSample.y) / frameScale
 
-    panVelocityX = panVelocityX * 0.65 + nextVelocityX * 0.35
-    panVelocityY = panVelocityY * 0.65 + nextVelocityY * 0.35
+    panVelocityX = panVelocityX * VELOCITY_SMOOTHING + nextVelocityX * (1 - VELOCITY_SMOOTHING)
+    panVelocityY = panVelocityY * VELOCITY_SMOOTHING + nextVelocityY * (1 - VELOCITY_SMOOTHING)
   }
 
   lastPointerSample.x = event.clientX
@@ -147,8 +137,6 @@ function snapPan(x, y) {
   panVelocityY = 0
   basePanX.value = x
   basePanY.value = y
-  hoverPanX.value = 0
-  hoverPanY.value = 0
   panX.value = x
   panY.value = y
   targetPanX.value = x
@@ -171,8 +159,8 @@ function animatePan() {
     } else {
       basePanX.value = clampPanValue(basePanX.value + panVelocityX, vw)
       basePanY.value = clampPanValue(basePanY.value + panVelocityY, vh)
-      targetPanX.value = clampPanValue(basePanX.value + hoverPanX.value, vw)
-      targetPanY.value = clampPanValue(basePanY.value + hoverPanY.value, vh)
+      targetPanX.value = clampPanValue(basePanX.value, vw)
+      targetPanY.value = clampPanValue(basePanY.value, vh)
     }
   }
 
@@ -230,19 +218,6 @@ function panToCanvasPoint(x, y) {
   applyPanTarget()
 }
 
-function onHoverMouseMove(event) {
-  if (isPanning.value || guideInteracting.value) return
-
-  const vw = window.innerWidth
-  const vh = window.innerHeight
-  const cx = (event.clientX / vw - 0.5) * 2
-  const cy = (event.clientY / vh - 0.5) * 2
-
-  hoverPanX.value = -cx * HOVER_PAN_MAX
-  hoverPanY.value = -cy * HOVER_PAN_MAX
-  applyPanTarget()
-}
-
 function shouldStartPan(event) {
   if (guideInteracting.value) return false
   if (event.button !== 0) return false
@@ -263,8 +238,6 @@ function onPointerDown(event) {
   panDragStart.y = event.clientY
   panDragStart.panX = basePanX.value
   panDragStart.panY = basePanY.value
-  hoverPanX.value = 0
-  hoverPanY.value = 0
   lastPointerSample.x = event.clientX
   lastPointerSample.y = event.clientY
   lastPointerSample.time = performance.now()
@@ -285,7 +258,7 @@ function onPointerMove(event) {
 
   basePanX.value = nextPan.x
   basePanY.value = nextPan.y
-  applyDragPanTarget()
+  applyPanTarget()
 }
 
 function endPan(event) {
@@ -298,11 +271,11 @@ function endPan(event) {
   }
 
   if (Math.abs(panVelocityX) > MOMENTUM_MIN || Math.abs(panVelocityY) > MOMENTUM_MIN) {
+    panVelocityX *= MOMENTUM_RELEASE_SCALE
+    panVelocityY *= MOMENTUM_RELEASE_SCALE
     isMomentum = true
     startPanAnimation()
   }
-
-  onHoverMouseMove(event)
 }
 
 function resetGuideToCanvasCenter() {
@@ -349,14 +322,12 @@ function centerView() {
 
 onMounted(() => {
   centerView()
-  window.addEventListener('mousemove', onHoverMouseMove)
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('resize', centerView)
 })
 
 onUnmounted(() => {
   stopPanAnimation()
-  window.removeEventListener('mousemove', onHoverMouseMove)
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('resize', centerView)
 })

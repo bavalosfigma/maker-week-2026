@@ -101,7 +101,7 @@ function openBook03() {
       :left="1288"
       :top="1288"
       :width="300"
-      :hover="false"
+      :interactive="false"
       :src="assetUrl('canvas/pencils.png')"
       alt="Pencils"
     />
@@ -110,6 +110,7 @@ function openBook03() {
       :top="1185"
       :width="167"
       :rotate="-4"
+      :interactive="false"
       :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
@@ -118,6 +119,7 @@ function openBook03() {
       :top="1310"
       :width="167"
       :rotate="3"
+      :interactive="false"
       :src="assetUrl('canvas/collage02.png')"
       alt="Collage 02"
     />
@@ -126,6 +128,7 @@ function openBook03() {
       :top="1318"
       :width="167"
       :rotate="-3"
+      :interactive="false"
       :src="assetUrl('canvas/collage03.png')"
       alt="Collage 03"
     />
@@ -133,6 +136,7 @@ function openBook03() {
       :left="613"
       :top="909"
       :width="80"
+      :interactive="false"
       :src="assetUrl('canvas/scissors.png')"
       alt="Scissors"
     />
@@ -140,6 +144,7 @@ function openBook03() {
       :left="866"
       :top="670"
       :width="333"
+      :interactive="false"
       :src="assetUrl('canvas/ruler.png')"
       alt="Ruler"
     />

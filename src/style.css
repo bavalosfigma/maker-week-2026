@@ -38,12 +38,17 @@ body {
   z-index: 10;
 }
 
-.canvas-surface:has(.canvas-item:hover) .canvas-item:not(:hover) {
+.canvas-surface:has(.canvas-item:not(.canvas-item--decorative):hover) .canvas-item:not(.canvas-item--decorative):not(:hover) {
   opacity: 0.18;
 }
 
-.canvas-item--no-hover {
+.canvas-item--no-hover,
+.canvas-item--decorative {
   cursor: default;
+}
+
+.canvas-item--decorative {
+  pointer-events: none;
 }
 
 .window-zen-enter-active {

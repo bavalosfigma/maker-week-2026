@@ -2,11 +2,12 @@
   <div
     class="canvas-item"
     :class="{
-      'canvas-item--no-hover': !hover,
+      'canvas-item--no-hover': !hover || !interactive,
+      'canvas-item--decorative': !interactive,
       'canvas-item--cropped': !!croppedLayout,
     }"
     :style="positionStyle"
-    @click="$emit('click', $event)"
+    @click="onClick"
   >
     <img
       v-if="src"
@@ -61,13 +62,23 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  interactive: {
+    type: Boolean,
+    default: true,
+  },
   rotate: {
     type: Number,
     default: 0,
   },
 })
 
-defineEmits(['click'])
+const emit = defineEmits(['click'])
+
+function onClick(event) {
+  if (props.interactive) {
+    emit('click', event)
+  }
+}
 
 const imageCrop = computed(() => getImageCrop(props.src))
 
