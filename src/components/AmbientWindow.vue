@@ -33,7 +33,7 @@ const videoEl = ref(null)
 const { zIndex, focusWindow } = useWindowStack(props.windowId)
 const panelPosition = ref({ top: 80, left: 80 })
 const panelHeight = ref(props.width)
-const { isDragging, startDrag } = useWindowDrag(panelPosition, {
+const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(panelPosition, {
   onDragStart: focusWindow,
 })
 
@@ -48,6 +48,7 @@ function randomizePosition() {
     top: padding + Math.random() * Math.max(0, maxTop - padding),
     left: padding + Math.random() * Math.max(0, maxLeft - padding),
   }
+  snapPosition()
 }
 
 function onImageLoad(event) {
@@ -124,8 +125,8 @@ onUnmounted(() => {
         class="ambient-window"
         :class="{ 'ambient-window--dragging': isDragging }"
         :style="{
-          top: `${panelPosition.top}px`,
-          left: `${panelPosition.left}px`,
+          top: `${displayPosition.top}px`,
+          left: `${displayPosition.left}px`,
           width: `${width}px`,
           zIndex: zIndex,
         }"

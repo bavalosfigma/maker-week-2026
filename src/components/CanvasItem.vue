@@ -148,6 +148,12 @@ const positionStyle = computed(() => {
   object-fit: unset;
 }
 
+.canvas-item--decorative .canvas-item__image {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .canvas-item__image--auto-height {
   height: auto;
 }

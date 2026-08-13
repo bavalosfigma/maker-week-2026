@@ -221,7 +221,12 @@ function panToCanvasPoint(x, y) {
 function shouldStartPan(event) {
   if (guideInteracting.value) return false
   if (event.button !== 0) return false
-  if (event.target.closest('.canvas-item')) return false
+
+  const canvasItem = event.target.closest('.canvas-item')
+  if (canvasItem && !canvasItem.classList.contains('canvas-item--decorative')) {
+    return false
+  }
+
   if (event.target.closest('.position-guide')) return false
 
   return true

@@ -22,7 +22,7 @@ const articleHtml = computed(() => marked.parse(article.value.content))
 const contentEl = ref(null)
 const scrollProgress = ref(0)
 const panelPosition = ref({ top: 80, left: 80 })
-const { isDragging, startDrag } = useWindowDrag(panelPosition, {
+const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(panelPosition, {
   onDragStart: focusWindow,
 })
 
@@ -71,6 +71,7 @@ function randomizePosition() {
     top: padding + Math.random() * Math.max(0, maxTop - padding),
     left: padding + Math.random() * Math.max(0, maxLeft - padding),
   }
+  snapPosition()
 }
 
 function close() {
@@ -115,8 +116,8 @@ onUnmounted(() => {
         class="article-window__panel"
         :class="{ 'article-window__panel--dragging': isDragging }"
         :style="{
-          top: `${panelPosition.top}px`,
-          left: `${panelPosition.left}px`,
+          top: `${displayPosition.top}px`,
+          left: `${displayPosition.left}px`,
           zIndex: zIndex,
           ...panelThemeStyle,
         }"

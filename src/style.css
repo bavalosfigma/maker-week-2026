@@ -51,6 +51,12 @@ body {
   pointer-events: none;
 }
 
+.canvas-item--decorative .canvas-item__image {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .window-zen-enter-active {
   transition:
     opacity var(--window-enter-duration) var(--window-ease-enter),
