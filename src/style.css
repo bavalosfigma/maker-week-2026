@@ -1,5 +1,4 @@
-@import './design/tokens.css';
-
+@import './design/fonts.css';
 @import './design/tokens.css';
 
 *,
@@ -8,20 +7,73 @@
   box-sizing: border-box;
 }
 
+html {
+  font-family: var(--font-sans);
+}
+
+html,
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
   line-height: 1.5;
   color: #1a1a1a;
-  background: #fafafa;
 }
 
 #app {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
   position: relative;
   z-index: 1;
+}
+
+.canvas-item {
+  position: absolute;
+  cursor: pointer;
+  z-index: 1;
+  transition: opacity 0.55s ease-out;
+}
+
+.canvas-item:hover,
+.record-player--selected {
+  z-index: 10;
+}
+
+.canvas-surface:has(.canvas-item:hover) .canvas-item:not(:hover) {
+  opacity: 0.18;
+}
+
+.canvas-surface:has(.record-player--selected) .canvas-item:not(.record-player--selected):not(:hover) {
+  opacity: 0.18;
+}
+
+.canvas-item--no-hover {
+  cursor: default;
+}
+
+.canvas-item--table-shadow {
+  filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 30%));
+}
+
+.window-zen-enter-active {
+  transition:
+    opacity var(--window-enter-duration) var(--window-ease-enter),
+    transform var(--window-enter-duration) var(--window-ease-enter);
+}
+
+.window-zen-leave-active {
+  transition:
+    opacity var(--window-leave-duration) var(--window-ease-leave),
+    transform var(--window-leave-duration) var(--window-ease-leave);
+}
+
+.window-zen-enter-from,
+.window-zen-leave-to {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.window-zen-enter-to,
+.window-zen-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .noise-overlay {
@@ -29,7 +81,7 @@ body {
   inset: 0;
   z-index: 99999;
   pointer-events: none;
-  opacity: .8;
+  opacity: 0.08;
   mix-blend-mode: overlay;
   background-repeat: repeat;
   background-size: 128px 128px;
