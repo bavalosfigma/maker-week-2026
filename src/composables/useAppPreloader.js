@@ -1,11 +1,11 @@
 import { onMounted, ref } from 'vue'
 import { preloadAppAssets } from '../utils/preloadAssets.js'
 
-export function useAppPreloader() {
+export function useAppPreloader(imagePaths) {
   const isReady = ref(false)
 
   onMounted(async () => {
-    await preloadAppAssets()
+    await preloadAppAssets(imagePaths)
     isReady.value = true
   })
 
