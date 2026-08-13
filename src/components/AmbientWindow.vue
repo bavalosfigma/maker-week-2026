@@ -3,11 +3,19 @@ import { computed, ref, watch } from 'vue'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
 import { getOffscreenOffset } from '../utils/offscreenSlide.js'
+import { getArticlePanelBounds } from '../utils/articleLayout.js'
+
+const EDGE_INSET = 16
+const ARTICLE_GAP = 24
 
 const props = defineProps({
   windowId: {
     type: String,
     required: true,
+  },
+  articleId: {
+    type: String,
+    default: '',
   },
   src: {
     type: String,
@@ -69,25 +77,40 @@ function randomRange(min, max) {
   return min + Math.random() * Math.max(0, max - min)
 }
 
-function randomizePosition() {
+/*
+ * The span this window can land in, kept clear of its article's reading column
+ * rather than of the viewport's midline — article02 sits left of centre, so the
+ * midline would push its right-hand windows straight over the text. When a
+ * gutter is narrower than the window, it goes flush to the screen edge and
+ * overlaps as little as it can.
+ */
+function getHorizontalRange(width) {
   const viewportWidth = window.innerWidth
-  const viewportHeight = window.innerHeight
-  const width = props.width
-  const height = panelHeight.value
-  const inset = 16
-  const minLeft = inset
-  const maxLeft = Math.max(inset, viewportWidth - width - inset)
-  const maxTop = Math.max(inset, viewportHeight - height - inset)
-  const midpoint = viewportWidth / 2
+  const maxLeft = Math.max(EDGE_INSET, viewportWidth - width - EDGE_INSET)
 
-  const left = props.side === 'right'
-    ? randomRange(Math.min(maxLeft, Math.max(minLeft, midpoint)), maxLeft)
-    : randomRange(minLeft, Math.max(minLeft, Math.min(maxLeft, midpoint - width)))
-  const top = randomRange(inset, maxTop)
+  const reading = props.articleId
+    ? getArticlePanelBounds(props.articleId, viewportWidth)
+    : { left: viewportWidth / 2, right: viewportWidth / 2 }
+
+  if (props.side === 'right') {
+    const min = Math.min(maxLeft, reading.right + ARTICLE_GAP)
+    return { min, max: Math.max(min, maxLeft) }
+  }
+
+  return {
+    min: EDGE_INSET,
+    max: Math.max(EDGE_INSET, Math.min(maxLeft, reading.left - ARTICLE_GAP - width)),
+  }
+}
+
+function randomizePosition() {
+  const height = panelHeight.value
+  const maxTop = Math.max(EDGE_INSET, window.innerHeight - height - EDGE_INSET)
+  const { min, max } = getHorizontalRange(props.width)
 
   panelPosition.value = {
-    top: Math.min(maxTop, Math.max(inset, top)),
-    left: Math.min(maxLeft, Math.max(minLeft, left)),
+    top: randomRange(EDGE_INSET, maxTop),
+    left: randomRange(min, max),
   }
   randomizeSlideOffset(panelPosition.value)
   snapPosition()

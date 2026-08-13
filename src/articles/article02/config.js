@@ -10,7 +10,7 @@ export default {
   layout: {
     width: 420,
     top: 0.15,
-    leftOffset: -120,
+    leftOffset: -20,
     caption: 'Notes from the second book, transcribed from a page that had been folded in half.',
   },
 }

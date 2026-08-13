@@ -5,6 +5,7 @@ import { useArticlePanelScroll } from '../composables/useArticlePanelScroll.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
+import { getArticlePanelBounds } from '../utils/articleLayout.js'
 import ArticleBlocks from './blocks/ArticleBlocks.vue'
 import OverlayTexture from './OverlayTexture.vue'
 import WindowCaption from './WindowCaption.vue'
@@ -32,17 +33,13 @@ const titleId = computed(() => `article-title-${props.articleId}`)
 const panelRef = ref(null)
 const liveRegionRef = ref(null)
 const viewportHeight = ref(typeof window === 'undefined' ? 800 : window.innerWidth ? window.innerHeight : 800)
+const viewportWidth = ref(typeof window === 'undefined' ? 1280 : window.innerWidth)
 
 const { zIndex, focusWindow, isFrontmostAmong } = useWindowStack(props.articleId)
 
-const panelWidth = computed(() => article.value.layout.width)
+const panelBounds = computed(() => getArticlePanelBounds(props.articleId, viewportWidth.value))
 const restTopRatio = computed(() => article.value.layout.top ?? DEFAULT_REST_TOP_RATIO)
-const leftOffset = computed(() => article.value.layout.leftOffset ?? 0)
 const restTop = computed(() => viewportHeight.value * restTopRatio.value)
-const restLeft = computed(() => {
-  const width = Math.min(panelWidth.value, window.innerWidth - 48)
-  return Math.max(24, (window.innerWidth - width) / 2 + leftOffset.value)
-})
 
 function getRestTop() {
   return restTop.value
@@ -50,8 +47,8 @@ function getRestTop() {
 
 const panelStyle = computed(() => ({
   '--panel-fill': article.value.theme.background,
-  width: `${panelWidth.value}px`,
-  left: `${restLeft.value}px`,
+  width: `${panelBounds.value.width}px`,
+  left: `${panelBounds.value.left}px`,
   top: `${restTop.value - scrollOffset.value}px`,
   zIndex: zIndex.value,
 }))
@@ -115,6 +112,7 @@ useFocusTrap(panelRef, open)
 
 function onResize() {
   viewportHeight.value = window.innerHeight
+  viewportWidth.value = window.innerWidth
   if (open.value) measure()
 }
 
@@ -128,6 +126,7 @@ function onKeyDown(event) {
 watch(open, async (isOpen) => {
   if (isOpen) {
     viewportHeight.value = window.innerHeight
+    viewportWidth.value = window.innerWidth
     focusWindow()
 
     await nextTick()
@@ -148,6 +147,7 @@ watch(() => article.value.blocks, () => {
 
 onMounted(() => {
   viewportHeight.value = window.innerHeight
+  viewportWidth.value = window.innerWidth
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('resize', onResize)
 })

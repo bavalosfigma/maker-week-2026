@@ -68,16 +68,19 @@ const article02Badge = getArticleEyebrow(getArticle('article02'))
     </Canvas>
     <ArticleWindow v-model:open="article01Open" article-id="article01" />
     <ArticleWindow v-model:open="article02Open" article-id="article02" />
-    <AmbientWindow v-model:open="ambient01Open" window-id="ambient01" :src="assetUrl('window-content/ambient01.png')"
-      alt="Ambient texture" :width="250" background="var(--color-blue)" side="left"
+    <AmbientWindow v-model:open="ambient01Open" window-id="ambient01" article-id="article01"
+      :src="assetUrl('window-content/ambient01.png')" alt="Ambient texture" :width="250"
+      background="var(--color-blue)" side="left"
       caption="A torn strip of newsprint, photographed under warm studio light before the paste dried." />
-    <AmbientWindow v-model:open="ambient02Open" window-id="ambient02" :src="assetUrl('window-content/ambient02.png')"
-      alt="Ambient texture 02" :width="380" background="var(--color-orange)" side="right"
+    <AmbientWindow v-model:open="ambient02Open" window-id="ambient02" article-id="article01"
+      :src="assetUrl('window-content/ambient02.png')" alt="Ambient texture 02" :width="380"
+      background="var(--color-orange)" side="right"
       caption="Study no. 12 — overlapping halftones, printed twice on purpose." />
-    <AmbientWindow v-model:open="ambient03Open" window-id="ambient03" :src="assetUrl('window-content/ambient03.png')"
-      alt="Ambient texture 03" :width="320" background="var(--color-yellow)" side="left"
+    <AmbientWindow v-model:open="ambient03Open" window-id="ambient03" article-id="article02"
+      :src="assetUrl('window-content/ambient03.png')" alt="Ambient texture 03" :width="320"
+      background="var(--color-yellow)" side="left"
       caption="Found on a workshop floor: a sheet that had been cut, kept, and cut again." />
-    <AmbientWindow v-model:open="animation01Open" window-id="animation01"
+    <AmbientWindow v-model:open="animation01Open" window-id="animation01" article-id="article02"
       :src="assetUrl('window-content/animation01.mp4')" alt="Animation 01" :width="250"
       background="var(--color-blue)" side="right"
       caption="Loop test, 24 frames. The mistake in frame nine is the reason we kept it." video />
