@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Figma Sans VF';
-  src: url('/fonts/Figma-Sans-VF.woff2') format('woff2');
+  src: url('../assets/fonts/Figma-Sans-VF.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'Figma Mono VF';
-  src: url('/fonts/Figma-Mono-VF.woff2') format('woff2');
+  src: url('../assets/fonts/Figma-Mono-VF.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

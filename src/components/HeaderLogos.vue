@@ -1,3 +1,7 @@
+<script setup>
+import { assetUrl } from '../utils/assetUrl.js'
+</script>
+
 <template>
   <header
     class="header-logos"
@@ -5,17 +9,17 @@
   >
     <img
       class="header-logos__rules"
-      src="/canvas/rules_logo.svg"
+      :src="assetUrl('canvas/rules_logo.svg')"
       alt="rules"
     >
     <img
       class="header-logos__for"
-      src="/canvas/for_logo.svg"
+      :src="assetUrl('canvas/for_logo.svg')"
       alt="for somewhere someone"
     >
     <img
       class="header-logos__making"
-      src="/canvas/making_logo.svg"
+      :src="assetUrl('canvas/making_logo.svg')"
       alt="making"
     >
   </header>

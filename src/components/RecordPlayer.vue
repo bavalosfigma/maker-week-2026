@@ -14,17 +14,17 @@
       ref="audioEl"
       loop
       preload="auto"
-      src="/audio/slt-figma-config-2026-record-2-wip12.mp3"
+      :src="assetUrl('audio/slt-figma-config-2026-record-2-wip12.mp3')"
       @canplay="tryPlay"
     />
     <img
       class="record-player__base"
-      src="/canvas/record.png"
+      :src="assetUrl('canvas/record.png')"
       alt="Record player"
     >
     <div class="record-player__vinyl">
       <img
-        src="/canvas/vinyl.png"
+        :src="assetUrl('canvas/vinyl.png')"
         alt="Vinyl record"
       >
     </div>
@@ -33,6 +33,7 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { assetUrl } from '../utils/assetUrl.js'
 
 defineProps({
   left: {

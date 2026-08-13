@@ -7,6 +7,7 @@ import CanvasItem from './components/CanvasItem.vue'
 import HeaderLogos from './components/HeaderLogos.vue'
 import RecordPlayer from './components/RecordPlayer.vue'
 import { provideWindowStack } from './composables/useWindowStack.js'
+import { assetUrl } from './utils/assetUrl.js'
 
 const windowStack = provideWindowStack()
 
@@ -63,7 +64,7 @@ function openBook03() {
       :left="sc(1484)"
       :top="sc(913)"
       :width="sc(400)"
-      src="/canvas/book01.png"
+      :src="assetUrl('canvas/book01.png')"
       alt="Open book spread"
       @click="openBook01"
     />
@@ -72,7 +73,7 @@ function openBook03() {
       :top="sc(1292)"
       :width="sc(300)"
       :hover="false"
-      src="/canvas/pencils.png"
+      :src="assetUrl('canvas/pencils.png')"
       alt="Pencils"
     />
     <CanvasItem
@@ -81,7 +82,7 @@ function openBook03() {
       :width="sc(200)"
       :rotate="-4"
       table-shadow
-      src="/canvas/collage01.png"
+      :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
     <CanvasItem
@@ -90,7 +91,7 @@ function openBook03() {
       :width="sc(200)"
       :rotate="3"
       table-shadow
-      src="/canvas/collage02.png"
+      :src="assetUrl('canvas/collage02.png')"
       alt="Collage 02"
     />
     <CanvasItem
@@ -99,35 +100,35 @@ function openBook03() {
       :width="sc(200)"
       :rotate="-3"
       table-shadow
-      src="/canvas/collage03.png"
+      :src="assetUrl('canvas/collage03.png')"
       alt="Collage 03"
     />
     <CanvasItem
       :left="sc(726)"
       :top="sc(985)"
       :width="sc(200)"
-      src="/canvas/scissors.png"
+      :src="assetUrl('canvas/scissors.png')"
       alt="Scissors"
     />
     <CanvasItem
       :left="sc(1039)"
       :top="sc(861)"
       :width="sc(400)"
-      src="/canvas/ruler.png"
+      :src="assetUrl('canvas/ruler.png')"
       alt="Ruler"
     />
     <CanvasItem
       :left="sc(993)"
       :top="sc(1424)"
       :width="sc(400)"
-      src="/canvas/sketchbook.png"
+      :src="assetUrl('canvas/sketchbook.png')"
       alt="Sketchbook"
     />
     <CanvasItem
       :left="sc(282)"
       :top="sc(957)"
       :width="sc(400)"
-      src="/canvas/book03.png"
+      :src="assetUrl('canvas/book03.png')"
       alt="Book 03"
       @click="openBook03"
     />
@@ -143,28 +144,28 @@ function openBook03() {
   <AmbientWindow
     v-model:open="ambient01Open"
     window-id="ambient01"
-    src="/canvas/ambient01.png"
+    :src="assetUrl('canvas/ambient01.png')"
     alt="Ambient texture"
     :width="200"
   />
   <AmbientWindow
     v-model:open="ambient02Open"
     window-id="ambient02"
-    src="/canvas/ambient02.png"
+    :src="assetUrl('canvas/ambient02.png')"
     alt="Ambient texture 02"
     :width="500"
   />
   <AmbientWindow
     v-model:open="coritaOpen"
     window-id="coritakent"
-    src="/canvas/coritakent.png"
+    :src="assetUrl('canvas/coritakent.png')"
     alt="Corita Kent"
     :width="200"
   />
   <AmbientWindow
     v-model:open="ambient03Open"
     window-id="ambient03"
-    src="/canvas/ambient03.png"
+    :src="assetUrl('canvas/ambient03.png')"
     alt="Ambient texture 03"
     :width="200"
   />
