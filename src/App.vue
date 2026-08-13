@@ -88,7 +88,7 @@ function openBook03() {
     <CanvasItem
       :left="1304"
       :top="849"
-      :width="400"
+      :width="480"
       :src="assetUrl('canvas/book01.png')"
       alt="Open book spread"
       @click="openBook01"
