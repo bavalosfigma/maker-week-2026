@@ -8,8 +8,15 @@
       width: `${size}px`,
       height: `${size}px`,
     }"
-    @click.stop="selected = !selected"
+    @click.stop="togglePlayback"
   >
+    <audio
+      ref="audioEl"
+      loop
+      preload="auto"
+      src="/audio/slt-figma-config-2026-record-2-wip12.mp3"
+      @canplay="tryPlay"
+    />
     <img
       class="record-player__base"
       src="/canvas/record.png"
@@ -25,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 defineProps({
   left: {
@@ -42,7 +49,59 @@ defineProps({
   },
 })
 
+const audioEl = ref(null)
 const selected = ref(false)
+
+async function tryPlay() {
+  const audio = audioEl.value
+  if (!audio || selected.value) return
+
+  try {
+    await audio.play()
+  } catch {
+    // Autoplay blocked until the user interacts with the page.
+  }
+}
+
+function pauseAudio() {
+  audioEl.value?.pause()
+}
+
+function syncAudio() {
+  if (selected.value) {
+    pauseAudio()
+    return
+  }
+
+  tryPlay()
+}
+
+function togglePlayback() {
+  selected.value = !selected.value
+}
+
+function resumeAfterUserGesture() {
+  if (selected.value) return
+
+  const audio = audioEl.value
+  if (!audio?.paused) return
+
+  tryPlay()
+}
+
+watch(selected, syncAudio)
+
+onMounted(() => {
+  syncAudio()
+  window.addEventListener('pointerdown', resumeAfterUserGesture)
+  window.addEventListener('keydown', resumeAfterUserGesture)
+})
+
+onUnmounted(() => {
+  pauseAudio()
+  window.removeEventListener('pointerdown', resumeAfterUserGesture)
+  window.removeEventListener('keydown', resumeAfterUserGesture)
+})
 </script>
 
 <style scoped>

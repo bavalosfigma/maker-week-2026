@@ -162,14 +162,14 @@ onUnmounted(() => {
   inset: 0;
   overflow: hidden;
   cursor: crosshair;
-  background: var(--color-blue);
+  background: var(--color-gray);
 }
 
 .canvas-surface {
   position: absolute;
   top: 0;
   left: 0;
-  background: var(--color-blue);
+  background: var(--color-gray);
   will-change: transform;
 }
 

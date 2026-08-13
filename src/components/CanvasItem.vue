@@ -6,6 +6,7 @@
       'canvas-item--table-shadow': tableShadow,
     }"
     :style="positionStyle"
+    @click="$emit('click', $event)"
   >
     <img
       v-if="src"
@@ -67,6 +68,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+defineEmits(['click'])
 
 const positionStyle = computed(() => {
   const size = {

@@ -4,4 +4,9 @@
   --color-orange: #ff7237;
   --color-yellow: #fafd5d;
   --color-gray: #e2e2e2;
+
+  --font-sans: 'Figma Sans VF', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Figma Mono VF', ui-monospace, monospace;
+
+  --window-shadow: 0 12px 40px rgb(0 0 0 / 12%);
 }
