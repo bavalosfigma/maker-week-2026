@@ -175,7 +175,7 @@ function openBook03() {
     window-id="ambient02"
     :src="assetUrl('canvas/ambient02.png')"
     alt="Ambient texture 02"
-    :width="500"
+    :width="380"
   />
   <AmbientWindow
     v-model:open="coritaOpen"
