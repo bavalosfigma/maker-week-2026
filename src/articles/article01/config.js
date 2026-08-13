@@ -5,9 +5,10 @@ export default {
   blocks,
   theme: {
     background: 'var(--color-yellow)',
-    padding: 'clamp(1.5rem, 4vw, 2.75rem)',
+    padding: '32px',
   },
   layout: {
-    width: 800,
+    width: 450,
+    caption: 'Chapter one, set in the original type. Read it slowly, the way it was printed.',
   },
 }

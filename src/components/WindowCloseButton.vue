@@ -27,6 +27,12 @@ defineEmits(['click'])
   border: 0px solid #000;
   background: #fff;
   cursor: pointer;
+  outline: none;
+}
+
+.window-close:focus,
+.window-close:focus-visible {
+  outline: none;
 }
 
 .window-close__icon {

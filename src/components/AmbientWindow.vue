@@ -4,6 +4,7 @@ import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import WindowCloseButton from './WindowCloseButton.vue'
+import WindowCaption from './WindowCaption.vue'
 
 const props = defineProps({
   windowId: {
@@ -26,6 +27,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  background: {
+    type: String,
+    default: 'var(--color-gray)',
+  },
+  caption: {
+    type: String,
+    default: '',
+  },
+  side: {
+    type: String,
+    default: 'left',
+    validator: (value) => ['left', 'right'].includes(value),
+  },
 })
 
 const open = defineModel('open', { type: Boolean, default: false })
@@ -38,6 +52,7 @@ const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(p
 })
 
 const closeLabel = computed(() => `Close ${props.alt || 'image'}`)
+const captionLabel = computed(() => props.caption || props.alt || props.windowId)
 
 function randomRange(min, max) {
   return min + Math.random() * Math.max(0, max - min)
@@ -51,31 +66,16 @@ function randomizePosition() {
   const inset = 16
   const minLeft = inset
   const maxLeft = Math.max(inset, viewportWidth - width - inset)
-  const minTop = -48
   const maxTop = Math.max(inset, viewportHeight - height - inset)
-  const inwardReach = Math.min(viewportWidth, viewportHeight) * 0.32
-  const edges = ['top', 'right', 'bottom', 'left']
-  const edge = edges[Math.floor(Math.random() * edges.length)]
+  const midpoint = viewportWidth / 2
 
-  let left = 0
-  let top = 0
-
-  if (edge === 'top') {
-    top = randomRange(minTop, Math.min(maxTop, inwardReach))
-    left = randomRange(minLeft, maxLeft)
-  } else if (edge === 'bottom') {
-    top = randomRange(Math.max(minTop, viewportHeight - inwardReach), maxTop)
-    left = randomRange(minLeft, maxLeft)
-  } else if (edge === 'left') {
-    left = randomRange(minLeft, Math.min(maxLeft, inwardReach))
-    top = randomRange(Math.max(0, minTop), maxTop)
-  } else {
-    left = randomRange(Math.max(minLeft, viewportWidth - inwardReach - width), maxLeft)
-    top = randomRange(Math.max(0, minTop), maxTop)
-  }
+  const left = props.side === 'right'
+    ? randomRange(Math.min(maxLeft, Math.max(minLeft, midpoint)), maxLeft)
+    : randomRange(minLeft, Math.max(minLeft, Math.min(maxLeft, midpoint - width)))
+  const top = randomRange(inset, maxTop)
 
   panelPosition.value = {
-    top: Math.min(maxTop, Math.max(edge === 'top' ? minTop : 0, top)),
+    top: Math.min(maxTop, Math.max(inset, top)),
     left: Math.min(maxLeft, Math.max(minLeft, left)),
   }
   snapPosition()
@@ -110,7 +110,7 @@ function syncVideoPlayback(shouldPlay) {
   if (!video) return
 
   if (shouldPlay) {
-    video.play().catch(() => {})
+    video.play().catch(() => { })
   } else {
     video.pause()
   }
@@ -150,43 +150,17 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <Transition name="window-zen">
-      <div
-        v-if="open"
-        class="ambient-window"
-        :class="{ 'ambient-window--dragging': isDragging }"
-        :style="{
-          top: `${displayPosition.top}px`,
-          left: `${displayPosition.left}px`,
-          width: `${width}px`,
-          zIndex: zIndex,
-        }"
-        @mouseenter="focusWindow"
-        @pointerdown="startDrag"
-      >
-        <WindowCloseButton
-          :aria-label="closeLabel"
-          @click="close"
-        />
-        <video
-          v-if="video"
-          ref="videoEl"
-          class="ambient-window__image"
-          :src="src"
-          :aria-label="alt"
-          autoplay
-          loop
-          muted
-          playsinline
-          @loadedmetadata="onVideoMetadata"
-        />
-        <img
-          v-else
-          class="ambient-window__image"
-          :src="src"
-          :alt="alt"
-          draggable="false"
-          @load="onImageLoad"
-        >
+      <div v-if="open" class="ambient-window" :class="{ 'ambient-window--dragging': isDragging }" :style="{
+        top: `${displayPosition.top}px`,
+        left: `${displayPosition.left}px`,
+        width: `${width}px`,
+        zIndex: zIndex,
+      }" @mouseenter="focusWindow" @pointerdown="startDrag">
+        <WindowCloseButton :aria-label="closeLabel" @click="close" />
+        <video v-if="video" ref="videoEl" class="ambient-window__image image-grain" :src="src" :aria-label="alt"
+          autoplay loop muted playsinline @loadedmetadata="onVideoMetadata" />
+        <img v-else class="ambient-window__image image-grain" :src="src" :alt="alt" draggable="false"
+          @load="onImageLoad">
       </div>
     </Transition>
   </Teleport>
@@ -195,7 +169,11 @@ onUnmounted(() => {
 <style scoped>
 .ambient-window {
   position: fixed;
+  padding: 0;
   overflow: hidden;
+  background: rgb(0 0 0 / 40%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;

@@ -3,11 +3,25 @@
 }
 
 .article-header__title {
+  margin: 0;
+}
+
+.article-intro {
+  margin: 0 0 1.5rem;
+}
+
+.article-intro__body {
   margin: 0 0 1.25rem;
 }
 
+.article-intro__body .article-paragraph:last-child {
+  margin-bottom: 0;
+}
+
 .article-heading.type-h2 {
-  margin: 2rem 0 0.75rem;
+  width: calc(100% - 80px);
+  margin: 2rem auto 0.75rem;
+  text-align: center;
 }
 
 .article-heading.type-h3 {

@@ -1,5 +1,5 @@
 /*
- * Type system — h1, h2, h3, body, caption
+ * Type system — h1, h2, h3, body, caption, caption-mono
  *
  * Change the tokens in :root to adjust typography site-wide.
  */
@@ -9,15 +9,16 @@
   --type-weight: 400;
   --type-variation: 'wght' 400, 'wdth' 90;
   --type-leading: 1.2;
-  --type-h1-leading: 0.8;
+  --type-h1-leading: 1.0;
   --type-tracking: -0.01em;
   --type-color: #000;
 
-  --type-h1-size: 48px;
+  --type-h1-size: 32px;
   --type-h2-size: 24px;
   --type-h3-size: 14px;
-  --type-body-size: 20px;
+  --type-body-size: 16px;
   --type-caption-size: 14px;
+  --type-caption-mono-size: 11px;
 }
 
 html {
@@ -38,6 +39,7 @@ html {
 .type-h3,
 .type-body,
 .type-caption,
+.type-caption-mono,
 .type-body :where(h1, h2, h3) {
   font-family: var(--type-family);
   font-weight: var(--type-weight);
@@ -75,6 +77,12 @@ html {
   --type-case: none;
 }
 
+.type-caption-mono {
+  --type-family: var(--font-mono);
+  --type-size: var(--type-caption-mono-size);
+  --type-case: none;
+}
+
 .type-body :where(h1) {
   --type-size: var(--type-h1-size);
   --type-case: uppercase;
@@ -92,7 +100,8 @@ html {
 }
 
 .type-body :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a),
-.type-caption :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a) {
+.type-caption :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a),
+.type-caption-mono :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a) {
   font: inherit;
   letter-spacing: inherit;
   line-height: inherit;
@@ -100,17 +109,20 @@ html {
 }
 
 .type-body :where(code, pre, kbd, samp),
-.type-caption :where(code, pre, kbd, samp) {
+.type-caption :where(code, pre, kbd, samp),
+.type-caption-mono :where(code, pre, kbd, samp) {
   font-family: var(--type-family);
 }
 
 .type-body :where(li)::marker,
-.type-caption :where(li)::marker {
+.type-caption :where(li)::marker,
+.type-caption-mono :where(li)::marker {
   font: inherit;
   color: inherit;
 }
 
 .type-body :where(mark),
-.type-caption :where(mark) {
+.type-caption :where(mark),
+.type-caption-mono :where(mark) {
   background: rgb(0 0 0 / 12%);
 }

@@ -5,9 +5,12 @@ export default {
   blocks,
   theme: {
     background: 'var(--color-green)',
-    padding: 'clamp(1.5rem, 4vw, 2.75rem)',
+    padding: '32px',
   },
   layout: {
-    width: 600,
+    width: 420,
+    top: 0.15,
+    leftOffset: -120,
+    caption: 'Notes from the second book, transcribed from a page that had been folded in half.',
   },
 }

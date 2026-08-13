@@ -7,8 +7,9 @@ import { useWindowStack } from '../composables/useWindowStack.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import ArticleBlocks from './blocks/ArticleBlocks.vue'
 import WindowCloseButton from './WindowCloseButton.vue'
+import WindowCaption from './WindowCaption.vue'
 
-const REST_TOP_RATIO = 0.2
+const DEFAULT_REST_TOP_RATIO = 0.2
 
 const props = defineProps({
   articleId: {
@@ -21,6 +22,10 @@ const open = defineModel('open', { type: Boolean, default: false })
 
 const article = computed(() => getArticle(props.articleId))
 const articleTitle = computed(() => getArticleTitle(article.value))
+const panelCaption = computed(() => {
+  const header = article.value.blocks.find((block) => block.type === 'header')
+  return article.value.layout.caption ?? header?.eyebrow ?? props.articleId
+})
 const titleId = computed(() => `article-title-${props.articleId}`)
 
 const panelRef = ref(null)
@@ -30,10 +35,12 @@ const viewportHeight = ref(typeof window === 'undefined' ? 800 : window.innerWid
 const { zIndex, focusWindow, isFrontmostAmong } = useWindowStack(props.articleId)
 
 const panelWidth = computed(() => article.value.layout.width)
-const restTop = computed(() => viewportHeight.value * REST_TOP_RATIO)
+const restTopRatio = computed(() => article.value.layout.top ?? DEFAULT_REST_TOP_RATIO)
+const leftOffset = computed(() => article.value.layout.leftOffset ?? 0)
+const restTop = computed(() => viewportHeight.value * restTopRatio.value)
 const restLeft = computed(() => {
   const width = Math.min(panelWidth.value, window.innerWidth - 48)
-  return Math.max(24, (window.innerWidth - width) / 2)
+  return Math.max(24, (window.innerWidth - width) / 2 + leftOffset.value)
 })
 
 function getRestTop() {
@@ -57,9 +64,16 @@ function announce(message) {
   liveRegionRef.value.textContent = message
 }
 
-function close() {
+const leaveDirection = ref('down')
+
+const transitionName = computed(() => (
+  leaveDirection.value === 'up' ? 'article-panel' : 'article-panel-down'
+))
+
+function close(direction = 'down') {
   if (!open.value) return
 
+  leaveDirection.value = direction
   playCloseBlip()
   announce(`Closed ${articleTitle.value}`)
   open.value = false
@@ -79,7 +93,7 @@ const {
   panelRef,
   getRestTop,
   isActive: isScrollActive,
-  onDismiss: close,
+  onDismiss: () => close('up'),
 })
 
 useFocusTrap(panelRef, open)
@@ -92,7 +106,7 @@ function onResize() {
 function onKeyDown(event) {
   if (event.key === 'Escape' && open.value) {
     event.preventDefault()
-    close()
+    close('down')
   }
 }
 
@@ -131,41 +145,17 @@ onUnmounted(() => {
 
 <template>
   <Teleport to="body">
-    <Transition
-      name="article-panel"
-      @after-leave="resetScroll"
-    >
-      <article
-        v-if="open"
-        ref="panelRef"
-        class="article-panel"
-        role="dialog"
-        aria-modal="true"
-        :aria-labelledby="titleId"
-        :style="panelStyle"
-        @mouseenter="focusWindow"
-        @pointerdown="focusWindow"
-      >
-        <p
-          ref="liveRegionRef"
-          class="sr-only"
-          aria-live="polite"
-          aria-atomic="true"
-        />
+    <Transition :name="transitionName" @after-leave="resetScroll">
+      <article v-if="open" ref="panelRef" class="article-panel" role="dialog" aria-modal="true"
+        :aria-labelledby="titleId" :style="panelStyle" @mouseenter="focusWindow" @pointerdown="focusWindow">
+        <p ref="liveRegionRef" class="sr-only" aria-live="polite" aria-atomic="true" />
 
-        <WindowCloseButton
-          :aria-label="`Close ${articleTitle}`"
-          @click="close"
-        />
+        <WindowCloseButton :aria-label="`Close ${articleTitle}`" @click="close('down')" />
 
-        <div
-          class="article-panel__content"
-          :style="contentStyle"
-        >
-          <ArticleBlocks
-            :blocks="article.blocks"
-            :title-id="titleId"
-          />
+        <!-- <WindowCaption :label="panelCaption" /> -->
+
+        <div class="article-panel__content" :style="contentStyle">
+          <ArticleBlocks :blocks="article.blocks" :title-id="titleId" />
         </div>
       </article>
     </Transition>
@@ -187,5 +177,15 @@ onUnmounted(() => {
 
 .article-panel__content {
   flex: 1;
+}
+
+.article-panel :deep(.window-close) {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.article-panel:hover :deep(.window-close),
+.article-panel :deep(.window-close:focus-visible) {
+  opacity: 1;
 }
 </style>
