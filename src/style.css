@@ -20,11 +20,35 @@ body {
   overflow: hidden;
   line-height: 1.5;
   color: #1a1a1a;
+  background: var(--color-gray);
 }
 
 #app {
   position: relative;
   z-index: 1;
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--color-gray);
+  opacity: 1;
+  transition: opacity var(--window-enter-duration) var(--window-ease-enter);
+}
+
+.preloader--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-shell {
+  opacity: 0;
+  transition: opacity var(--window-enter-duration) var(--window-ease-enter);
+}
+
+.app-shell--ready {
+  opacity: 1;
 }
 
 .canvas-item {

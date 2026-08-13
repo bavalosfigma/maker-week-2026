@@ -6,6 +6,7 @@ import Canvas from './components/Canvas.vue'
 import CanvasItem from './components/CanvasItem.vue'
 import HeaderLogos from './components/HeaderLogos.vue'
 import RecordPlayer from './components/RecordPlayer.vue'
+import { useAppPreloader } from './composables/useAppPreloader.js'
 import { provideWindowStack } from './composables/useWindowStack.js'
 import { playOpenBlip } from './composables/useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
@@ -14,6 +15,7 @@ import { CANVAS_SIZE } from './utils/canvasCoords.js'
 import { getCroppedLayout, getImageCrop } from './utils/imageCrops.js'
 
 const windowStack = provideWindowStack()
+const { isReady } = useAppPreloader()
 
 const CANVAS_CENTER = CANVAS_SIZE / 2
 const RECORD_SIZE = 460
@@ -82,8 +84,17 @@ function openBook03() {
 </script>
 
 <template>
-  <HeaderLogos />
-  <Canvas>
+  <div
+    class="preloader"
+    :class="{ 'preloader--hidden': isReady }"
+    aria-hidden="true"
+  />
+  <div
+    class="app-shell"
+    :class="{ 'app-shell--ready': isReady }"
+  >
+    <HeaderLogos />
+    <Canvas>
     <RecordPlayer
       :left="recordLeft"
       :top="recordTop"
@@ -208,4 +219,5 @@ function openBook03() {
     :width="250"
     video
   />
+  </div>
 </template>
