@@ -67,16 +67,16 @@ const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
     <ArticleWindow v-model:open="article01Open" article-id="article01" />
     <ArticleWindow v-model:open="article02Open" article-id="article02" />
     <AmbientWindow v-model:open="ambient01Open" window-id="ambient01" :src="assetUrl('old-canvas/ambient01.png')"
-      alt="Ambient texture" :width="250" background="var(--color-blue)" side="left"
+      alt="Ambient texture" :width="200" background="var(--color-blue)" side="left"
       caption="A torn strip of newsprint, photographed under warm studio light before the paste dried." />
     <AmbientWindow v-model:open="ambient02Open" window-id="ambient02" :src="assetUrl('old-canvas/ambient02.png')"
-      alt="Ambient texture 02" :width="380" background="var(--color-orange)" side="right"
+      alt="Ambient texture 02" :width="475" background="var(--color-orange)" side="right"
       caption="Study no. 12 — overlapping halftones, printed twice on purpose." />
     <AmbientWindow v-model:open="ambient03Open" window-id="ambient03" :src="assetUrl('old-canvas/ambient03.png')"
-      alt="Ambient texture 03" :width="320" background="var(--color-yellow)" side="left"
+      alt="Ambient texture 03" :width="400" background="var(--color-yellow)" side="left"
       caption="Found on a workshop floor: a sheet that had been cut, kept, and cut again." />
     <AmbientWindow v-model:open="animation01Open" window-id="animation01"
-      :src="assetUrl('old-canvas/animation01.mp4')" alt="Animation 01" :width="250" background="var(--color-blue)"
+      :src="assetUrl('old-canvas/animation01.mp4')" alt="Animation 01" :width="313" background="var(--color-blue)"
       side="right" caption="Loop test, 24 frames. The mistake in frame nine is the reason we kept it." video />
   </div>
 </template>
