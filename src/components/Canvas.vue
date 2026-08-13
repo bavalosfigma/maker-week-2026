@@ -2,11 +2,13 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import PositionGuide from './PositionGuide.vue'
 
-const CANVAS_SIZE = 2400
+const CANVAS_SIZE = 2000
 const CANVAS_CENTER = CANVAS_SIZE / 2
 
 const panX = ref(0)
 const panY = ref(0)
+const targetPanX = ref(0)
+const targetPanY = ref(0)
 const mouseX = ref(0)
 const mouseY = ref(0)
 const guideActive = ref(false)
@@ -15,6 +17,9 @@ const guideCenterX = ref(CANVAS_CENTER)
 const guideCenterY = ref(CANVAS_CENTER)
 const guideSize = ref(120)
 const copyFeedback = ref(false)
+
+const PAN_EASE = 0.07
+let panAnimationFrame = null
 
 function guideCoordinatesText() {
   const x = Math.round(guideCenterX.value - guideSize.value / 2)
@@ -45,12 +50,57 @@ function clampPanValue(pan, viewportSize) {
   return Math.max(min, Math.min(0, pan))
 }
 
+function setPanTargets(x, y) {
+  targetPanX.value = x
+  targetPanY.value = y
+  startPanAnimation()
+}
+
+function snapPan(x, y) {
+  panX.value = x
+  panY.value = y
+  targetPanX.value = x
+  targetPanY.value = y
+  stopPanAnimation()
+}
+
+function animatePan() {
+  const dx = targetPanX.value - panX.value
+  const dy = targetPanY.value - panY.value
+
+  if (Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05) {
+    panX.value = targetPanX.value
+    panY.value = targetPanY.value
+    stopPanAnimation()
+    return
+  }
+
+  panX.value += dx * PAN_EASE
+  panY.value += dy * PAN_EASE
+  panAnimationFrame = requestAnimationFrame(animatePan)
+}
+
+function startPanAnimation() {
+  if (panAnimationFrame !== null) return
+
+  panAnimationFrame = requestAnimationFrame(animatePan)
+}
+
+function stopPanAnimation() {
+  if (panAnimationFrame === null) return
+
+  cancelAnimationFrame(panAnimationFrame)
+  panAnimationFrame = null
+}
+
 function panToCanvasPoint(x, y) {
   const vw = window.innerWidth
   const vh = window.innerHeight
 
-  panX.value = clampPanValue(vw / 2 - x, vw)
-  panY.value = clampPanValue(vh / 2 - y, vh)
+  setPanTargets(
+    clampPanValue(vw / 2 - x, vw),
+    clampPanValue(vh / 2 - y, vh),
+  )
 }
 
 function clampPanFromMouse(clientX, clientY) {
@@ -61,8 +111,10 @@ function clampPanFromMouse(clientX, clientY) {
   const minPanX = Math.min(0, vw - CANVAS_SIZE)
   const minPanY = Math.min(0, vh - CANVAS_SIZE)
 
-  panX.value = (clientX / vw) * minPanX
-  panY.value = (clientY / vh) * minPanY
+  setPanTargets(
+    (clientX / vw) * minPanX,
+    (clientY / vh) * minPanY,
+  )
 }
 
 function onMouseMove(event) {
@@ -97,7 +149,13 @@ function onKeyDown(event) {
 }
 
 function centerView() {
-  panToCanvasPoint(guideCenterX.value, guideCenterY.value)
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+
+  snapPan(
+    clampPanValue(vw / 2 - guideCenterX.value, vw),
+    clampPanValue(vh / 2 - guideCenterY.value, vh),
+  )
   mouseX.value = window.innerWidth / 2
   mouseY.value = window.innerHeight / 2
 }
@@ -110,6 +168,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  stopPanAnimation()
   window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('resize', centerView)

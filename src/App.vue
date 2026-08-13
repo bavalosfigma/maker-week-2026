@@ -10,8 +10,15 @@ import { provideWindowStack } from './composables/useWindowStack.js'
 
 const windowStack = provideWindowStack()
 
-const CANVAS_CENTER = 1200
-const ITEM_SIZE = 600
+const CANVAS_SIZE = 2000
+const CANVAS_CENTER = CANVAS_SIZE / 2
+const CANVAS_SCALE = CANVAS_SIZE / 2400
+
+function sc(value) {
+  return Math.round(value * CANVAS_SCALE)
+}
+
+const ITEM_SIZE = sc(600)
 const itemOffset = CANVAS_CENTER - ITEM_SIZE / 2
 
 const article01Open = ref(false)
@@ -53,73 +60,73 @@ function openBook03() {
       :size="ITEM_SIZE"
     />
     <CanvasItem
-      :left="1484"
-      :top="913"
-      :width="400"
+      :left="sc(1484)"
+      :top="sc(913)"
+      :width="sc(400)"
       src="/canvas/book01.png"
       alt="Open book spread"
       @click="openBook01"
     />
     <CanvasItem
-      :left="1462"
-      :top="1292"
-      :width="300"
+      :left="sc(1462)"
+      :top="sc(1292)"
+      :width="sc(300)"
       :hover="false"
       src="/canvas/pencils.png"
       alt="Pencils"
     />
     <CanvasItem
-      :left="670"
-      :top="1470"
-      :width="200"
+      :left="sc(670)"
+      :top="sc(1470)"
+      :width="sc(200)"
       :rotate="-4"
       table-shadow
       src="/canvas/collage01.png"
       alt="Collage 01"
     />
     <CanvasItem
-      :left="766"
-      :top="1500"
-      :width="200"
+      :left="sc(766)"
+      :top="sc(1500)"
+      :width="sc(200)"
       :rotate="3"
       table-shadow
       src="/canvas/collage02.png"
       alt="Collage 02"
     />
     <CanvasItem
-      :left="600"
-      :top="1629"
-      :width="200"
+      :left="sc(600)"
+      :top="sc(1629)"
+      :width="sc(200)"
       :rotate="-3"
       table-shadow
       src="/canvas/collage03.png"
       alt="Collage 03"
     />
     <CanvasItem
-      :left="726"
-      :top="985"
-      :width="200"
+      :left="sc(726)"
+      :top="sc(985)"
+      :width="sc(200)"
       src="/canvas/scissors.png"
       alt="Scissors"
     />
     <CanvasItem
-      :left="1039"
-      :top="861"
-      :width="400"
+      :left="sc(1039)"
+      :top="sc(861)"
+      :width="sc(400)"
       src="/canvas/ruler.png"
       alt="Ruler"
     />
     <CanvasItem
-      :left="993"
-      :top="1424"
-      :width="400"
+      :left="sc(993)"
+      :top="sc(1424)"
+      :width="sc(400)"
       src="/canvas/sketchbook.png"
       alt="Sketchbook"
     />
     <CanvasItem
-      :left="282"
-      :top="957"
-      :width="400"
+      :left="sc(282)"
+      :top="sc(957)"
+      :width="sc(400)"
       src="/canvas/book03.png"
       alt="Book 03"
       @click="openBook03"

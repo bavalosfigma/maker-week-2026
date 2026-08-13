@@ -52,6 +52,30 @@ body {
   filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 30%));
 }
 
+.window-zen-enter-active {
+  transition:
+    opacity var(--window-enter-duration) var(--window-ease-enter),
+    transform var(--window-enter-duration) var(--window-ease-enter);
+}
+
+.window-zen-leave-active {
+  transition:
+    opacity var(--window-leave-duration) var(--window-ease-leave),
+    transform var(--window-leave-duration) var(--window-ease-leave);
+}
+
+.window-zen-enter-from,
+.window-zen-leave-to {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.window-zen-enter-to,
+.window-zen-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;

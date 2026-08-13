@@ -84,31 +84,33 @@ onUnmounted(() => {
 
 <template>
   <Teleport to="body">
-    <div
-      v-if="open"
-      class="ambient-window"
-      :class="{ 'ambient-window--dragging': isDragging }"
-      :style="{
-        top: `${panelPosition.top}px`,
-        left: `${panelPosition.left}px`,
-        width: `${width}px`,
-        zIndex: zIndex,
-      }"
-      @mouseenter="focusWindow"
-      @pointerdown="startDrag"
-    >
-      <WindowCloseButton
-        :aria-label="closeLabel"
-        @click="close"
-      />
-      <img
-        class="ambient-window__image"
-        :src="src"
-        :alt="alt"
-        draggable="false"
-        @load="onImageLoad"
+    <Transition name="window-zen">
+      <div
+        v-if="open"
+        class="ambient-window"
+        :class="{ 'ambient-window--dragging': isDragging }"
+        :style="{
+          top: `${panelPosition.top}px`,
+          left: `${panelPosition.left}px`,
+          width: `${width}px`,
+          zIndex: zIndex,
+        }"
+        @mouseenter="focusWindow"
+        @pointerdown="startDrag"
       >
-    </div>
+        <WindowCloseButton
+          :aria-label="closeLabel"
+          @click="close"
+        />
+        <img
+          class="ambient-window__image"
+          :src="src"
+          :alt="alt"
+          draggable="false"
+          @load="onImageLoad"
+        >
+      </div>
+    </Transition>
   </Teleport>
 </template>
 

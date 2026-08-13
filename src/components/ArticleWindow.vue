@@ -107,41 +107,43 @@ onUnmounted(() => {
 
 <template>
   <Teleport to="body">
-    <article
-      v-if="open"
-      class="article-window__panel"
-      :class="{ 'article-window__panel--dragging': isDragging }"
-      :style="{
-        top: `${panelPosition.top}px`,
-        left: `${panelPosition.left}px`,
-        zIndex: zIndex,
-        ...panelThemeStyle,
-      }"
-      :aria-label="article.title"
-      @mouseenter="focusWindow"
-      @pointerdown="startDrag"
-    >
-      <WindowCloseButton
-        :aria-label="`Close ${article.title}`"
-        @click="close"
-      />
-      <div
-        ref="contentEl"
-        class="article-window__content"
-        :style="contentStyle"
-        @scroll="updateScrollProgress"
-        v-html="articleHtml"
-      />
-      <div
-        class="article-window__progress"
-        aria-hidden="true"
+    <Transition name="window-zen">
+      <article
+        v-if="open"
+        class="article-window__panel"
+        :class="{ 'article-window__panel--dragging': isDragging }"
+        :style="{
+          top: `${panelPosition.top}px`,
+          left: `${panelPosition.left}px`,
+          zIndex: zIndex,
+          ...panelThemeStyle,
+        }"
+        :aria-label="article.title"
+        @mouseenter="focusWindow"
+        @pointerdown="startDrag"
       >
-        <div
-          class="article-window__progress-fill"
-          :style="{ width: `${scrollProgress}%` }"
+        <WindowCloseButton
+          :aria-label="`Close ${article.title}`"
+          @click="close"
         />
-      </div>
-    </article>
+        <div
+          ref="contentEl"
+          class="article-window__content"
+          :style="contentStyle"
+          @scroll="updateScrollProgress"
+          v-html="articleHtml"
+        />
+        <div
+          class="article-window__progress"
+          aria-hidden="true"
+        >
+          <div
+            class="article-window__progress-fill"
+            :style="{ width: `${scrollProgress}%` }"
+          />
+        </div>
+      </article>
+    </Transition>
   </Teleport>
 </template>
 
