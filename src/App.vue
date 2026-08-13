@@ -126,15 +126,15 @@ function openBook03() {
       alt="Collage 03"
     />
     <CanvasItem
-      :left="605"
-      :top="821"
+      :left="561"
+      :top="765"
       :width="167"
       :src="assetUrl('canvas/scissors.png')"
       alt="Scissors"
     />
     <CanvasItem
       :left="866"
-      :top="718"
+      :top="670"
       :width="333"
       :src="assetUrl('canvas/ruler.png')"
       alt="Ruler"
@@ -147,7 +147,7 @@ function openBook03() {
       alt="Sketchbook"
     />
     <CanvasItem
-      :left="189"
+      :left="133"
       :top="829"
       :width="400"
       :src="assetUrl('canvas/book03.png')"

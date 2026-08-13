@@ -18,8 +18,8 @@ defineEmits(['click'])
 <style scoped>
 .window-close {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0px;
+  right: 0px;
   z-index: 2;
   width: 20px;
   height: 20px;

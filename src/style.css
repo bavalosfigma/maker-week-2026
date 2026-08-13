@@ -80,3 +80,22 @@ body {
   background-repeat: repeat;
   background-size: 128px 128px;
 }
+
+.article-window__panel .window-close,
+.ambient-window .window-close {
+  transition: opacity 0.2s ease;
+}
+
+@media (hover: hover) {
+  .article-window__panel:not(:hover):not(:focus-within) .window-close,
+  .ambient-window:not(:hover):not(:focus-within) .window-close {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .article-window__panel--dragging .window-close,
+  .ambient-window--dragging .window-close {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
