@@ -3,15 +3,14 @@ import { assetUrl } from './assetUrl.js'
 export const APP_IMAGE_ASSETS = [
   'canvas/record.png',
   'canvas/vinyl.png',
-  'canvas/book01.png',
-  'canvas/book03.png',
-  'canvas/pencils.png',
-  'canvas/collage01.png',
-  'canvas/collage02.png',
-  'canvas/collage03.png',
-  'canvas/scissors.png',
-  'canvas/ruler.png',
-  'canvas/sketchbook.png',
+  'canvas/collage.png',
+  'canvas/stencil.png',
+  'canvas/pencil.png',
+  'canvas/screwdriver.png',
+  'canvas/headphones.png',
+  'canvas/calculator.png',
+  'canvas/tape.png',
+  'canvas/mouse.png',
 ]
 
 function preloadImage(path) {

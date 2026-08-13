@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import CanvasTexture from './CanvasTexture.vue'
 import PositionGuide from './PositionGuide.vue'
 import {
   CANVAS_SIZE,
@@ -357,6 +358,8 @@ onUnmounted(() => {
     >
       <slot />
     </div>
+
+    <CanvasTexture />
 
     <PositionGuide
       v-if="guideActive"
