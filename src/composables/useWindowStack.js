@@ -19,7 +19,24 @@ export function provideWindowStack() {
     return zIndexes.value[id] ?? BASE_Z_INDEX
   }
 
-  const stack = { bringToFront, getZIndex, zIndexes }
+  function isFrontmost(id) {
+    const values = Object.values(zIndexes.value)
+    if (!values.length) return true
+
+    return getZIndex(id) >= Math.max(...values)
+  }
+
+  function isFrontmostAmong(id, matchId) {
+    const values = Object.entries(zIndexes.value)
+      .filter(([key]) => matchId(key))
+      .map(([, value]) => value)
+
+    if (!values.length) return true
+
+    return getZIndex(id) >= Math.max(...values)
+  }
+
+  const stack = { bringToFront, getZIndex, isFrontmost, isFrontmostAmong, zIndexes }
 
   provide(WINDOW_STACK_KEY, stack)
 
@@ -39,6 +56,14 @@ export function useWindowStack(id) {
     stack.bringToFront(id)
   }
 
+  function isFrontmost() {
+    return stack.isFrontmost(id)
+  }
+
+  function isFrontmostAmong(matchId) {
+    return stack.isFrontmostAmong(id, matchId)
+  }
+
   onUnmounted(() => {
     const { [id]: removed, ...remaining } = stack.zIndexes.value
     stack.zIndexes.value = remaining
@@ -47,5 +72,7 @@ export function useWindowStack(id) {
   return {
     zIndex,
     focusWindow,
+    isFrontmost,
+    isFrontmostAmong,
   }
 }

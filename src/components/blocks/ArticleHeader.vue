@@ -8,6 +8,10 @@ defineProps({
     type: String,
     required: true,
   },
+  titleId: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 
@@ -19,7 +23,10 @@ defineProps({
     >
       {{ eyebrow }}
     </p>
-    <h1 class="article-header__title type-h1">
+    <h1
+      :id="titleId || undefined"
+      class="article-header__title type-h1"
+    >
       {{ title }}
     </h1>
   </header>

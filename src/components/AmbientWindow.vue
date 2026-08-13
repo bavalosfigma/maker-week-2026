@@ -39,14 +39,44 @@ const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(p
 
 const closeLabel = computed(() => `Close ${props.alt || 'image'}`)
 
+function randomRange(min, max) {
+  return min + Math.random() * Math.max(0, max - min)
+}
+
 function randomizePosition() {
-  const padding = 24
-  const maxLeft = window.innerWidth - props.width - padding
-  const maxTop = window.innerHeight - panelHeight.value - padding
+  const viewportWidth = window.innerWidth
+  const viewportHeight = window.innerHeight
+  const width = props.width
+  const height = panelHeight.value
+  const inset = 16
+  const minLeft = inset
+  const maxLeft = Math.max(inset, viewportWidth - width - inset)
+  const minTop = -48
+  const maxTop = Math.max(inset, viewportHeight - height - inset)
+  const inwardReach = Math.min(viewportWidth, viewportHeight) * 0.32
+  const edges = ['top', 'right', 'bottom', 'left']
+  const edge = edges[Math.floor(Math.random() * edges.length)]
+
+  let left = 0
+  let top = 0
+
+  if (edge === 'top') {
+    top = randomRange(minTop, Math.min(maxTop, inwardReach))
+    left = randomRange(minLeft, maxLeft)
+  } else if (edge === 'bottom') {
+    top = randomRange(Math.max(minTop, viewportHeight - inwardReach), maxTop)
+    left = randomRange(minLeft, maxLeft)
+  } else if (edge === 'left') {
+    left = randomRange(minLeft, Math.min(maxLeft, inwardReach))
+    top = randomRange(Math.max(0, minTop), maxTop)
+  } else {
+    left = randomRange(Math.max(minLeft, viewportWidth - inwardReach - width), maxLeft)
+    top = randomRange(Math.max(0, minTop), maxTop)
+  }
 
   panelPosition.value = {
-    top: padding + Math.random() * Math.max(0, maxTop - padding),
-    left: padding + Math.random() * Math.max(0, maxLeft - padding),
+    top: Math.min(maxTop, Math.max(edge === 'top' ? minTop : 0, top)),
+    left: Math.min(maxLeft, Math.max(minLeft, left)),
   }
   snapPosition()
 }
