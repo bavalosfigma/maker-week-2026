@@ -120,8 +120,8 @@ onUnmounted(endDrag)
     }"
     @pointerdown="startMove"
   >
-    <span class="position-guide__coords">
-      <span class="position-guide__mode">{{ coordinateLabel }}</span>
+    <span class="position-guide__coords type-body">
+      <span class="position-guide__mode type-h3">{{ coordinateLabel }}</span>
       {{ displayCoordinates }}
       <span class="position-guide__size">· {{ sizeLabel }}px</span>
       <button
@@ -192,10 +192,7 @@ onUnmounted(endDrag)
   padding: 0.2rem 0.45rem;
   border-radius: 4px;
   background: rgb(255 255 255 / 92%);
-  font-size: 11px;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: #1a1a1a;
   white-space: nowrap;
 }
 
@@ -204,10 +201,8 @@ onUnmounted(endDrag)
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #f5f5f5;
-  font-family: inherit;
-  font-size: 10px;
-  font-weight: 600;
-  color: #333;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
 }
 
@@ -217,13 +212,10 @@ onUnmounted(endDrag)
 
 .position-guide__mode {
   margin-right: 0.25rem;
-  font-weight: 700;
-  text-transform: uppercase;
   color: var(--color-blue);
 }
 
 .position-guide__size {
-  font-weight: 500;
   color: #666;
 }
 

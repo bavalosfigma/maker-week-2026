@@ -1,10 +1,10 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import { marked } from 'marked'
-import { getArticle } from '../articles/index.js'
+import { getArticle, getArticleTitle } from '../articles/index.js'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
+import ArticleBlocks from './blocks/ArticleBlocks.vue'
 import WindowCloseButton from './WindowCloseButton.vue'
 
 const props = defineProps({
@@ -17,8 +17,8 @@ const props = defineProps({
 const open = defineModel('open', { type: Boolean, default: false })
 
 const article = computed(() => getArticle(props.articleId))
+const articleTitle = computed(() => getArticleTitle(article.value))
 const { zIndex, focusWindow } = useWindowStack(props.articleId)
-const articleHtml = computed(() => marked.parse(article.value.content))
 const contentEl = ref(null)
 const scrollProgress = ref(0)
 const panelPosition = ref({ top: 80, left: 80 })
@@ -31,10 +31,8 @@ const panelThemeStyle = computed(() => {
 
   return {
     background: theme.background,
-    color: theme.color,
     width: theme.width,
     maxHeight: theme.maxHeight,
-    fontFamily: theme.fontFamily,
   }
 })
 
@@ -93,7 +91,7 @@ watch(open, (isOpen) => {
   }
 })
 
-watch(articleHtml, () => {
+watch(() => article.value.blocks, () => {
   if (open.value) {
     resetScrollProgress()
   }
@@ -121,12 +119,12 @@ onUnmounted(() => {
           zIndex: zIndex,
           ...panelThemeStyle,
         }"
-        :aria-label="article.title"
+        :aria-label="articleTitle"
         @mouseenter="focusWindow"
         @pointerdown="startDrag"
       >
         <WindowCloseButton
-          :aria-label="`Close ${article.title}`"
+          :aria-label="`Close ${articleTitle}`"
           @click="close"
         />
         <div
@@ -135,16 +133,7 @@ onUnmounted(() => {
           :style="contentStyle"
           @scroll="updateScrollProgress"
         >
-          <p
-            v-if="article.eyebrow"
-            class="article-window__eyebrow"
-          >
-            {{ article.eyebrow }}
-          </p>
-          <div
-            class="article-window__body"
-            v-html="articleHtml"
-          />
+          <ArticleBlocks :blocks="article.blocks" />
         </div>
         <div
           class="article-window__progress"
@@ -198,47 +187,5 @@ onUnmounted(() => {
 .article-window__panel--dragging {
   cursor: grabbing;
   user-select: none;
-}
-
-.article-window__body :deep(p),
-.article-window__body :deep(ul),
-.article-window__body :deep(ol),
-.article-window__body :deep(li) {
-  font-size: 1.25rem;
-  font-weight: 400;
-  line-height: 1.25;
-  color: #222;
-}
-
-.article-window__body :deep(p) {
-  margin: 0 0 1rem;
-}
-
-.article-window__body :deep(p:last-child) {
-  margin-bottom: 0;
-}
-
-.article-window__body :deep(ul),
-.article-window__body :deep(ol) {
-  margin: 0 0 1rem;
-  padding-left: 1.25rem;
-}
-
-.article-window__body :deep(li) {
-  margin: 0 0 0.5rem;
-}
-
-.article-window__body :deep(li:last-child) {
-  margin-bottom: 0;
-}
-
-.article-window__body :deep(li p) {
-  margin: 0;
-}
-
-.article-window__body :deep(li::marker) {
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: #222;
 }
 </style>

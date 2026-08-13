@@ -373,7 +373,7 @@ onUnmounted(() => {
 
     <div
       v-if="guideActive"
-      class="canvas-hud"
+      class="canvas-hud type-body"
     >
       {{ coordinateModeLabel }} coords ·
       <kbd>G</kbd> switch mode ·
@@ -420,8 +420,6 @@ onUnmounted(() => {
   padding: 0.45rem 0.7rem;
   border-radius: 6px;
   background: rgb(255 255 255 / 90%);
-  font-size: 12px;
-  color: #444;
   pointer-events: none;
 }
 
@@ -430,13 +428,11 @@ onUnmounted(() => {
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #f5f5f5;
-  font-family: inherit;
-  font-size: 11px;
+  font: inherit;
 }
 
 .canvas-hud__copied {
   margin-left: 0.35rem;
   color: var(--color-green);
-  font-weight: 600;
 }
 </style>

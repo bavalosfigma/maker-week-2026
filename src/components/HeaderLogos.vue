@@ -11,13 +11,13 @@ const introHtml = computed(() => marked.parse(intro))
     class="header-logos"
     aria-label="Rules for making"
   >
-    <h2 class="header-logos__rules">principles</h2>
-    <h2 class="header-logos__for">for</h2>
+    <h1 class="header-logos__rules type-h2">principles</h1>
+    <h1 class="header-logos__for type-h2">for</h1>
     <div
-      class="header-logos__intro"
+      class="header-logos__intro type-caption"
       v-html="introHtml"
     />
-    <h2 class="header-logos__making">making</h2>
+    <h1 class="header-logos__making type-h2">making</h1>
   </header>
 </template>
 
@@ -36,15 +36,8 @@ const introHtml = computed(() => marked.parse(intro))
   pointer-events: none;
 }
 
-.header-logos h2 {
+.header-logos h1 {
   margin: 0;
-  font-size: 40px;
-  font-weight: 300;
-  font-variation-settings: 'wght' 300, 'wdth' 60;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  text-transform: lowercase;
-  color: #000;
 }
 
 .header-logos__rules {
@@ -60,10 +53,6 @@ const introHtml = computed(() => marked.parse(intro))
 .header-logos__intro {
   grid-column: 3;
   width: 300px;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.25;
-  color: #222;
 }
 
 .header-logos__intro :deep(p) {

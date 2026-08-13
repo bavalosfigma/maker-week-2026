@@ -6,7 +6,7 @@ import './theme.css'
  * Article registry.
  *
  * To add a new article popup:
- * 1. Create src/articles/articleXX/ with config.js and content.md
+ * 1. Create src/articles/articleXX/ with config.js, content.js, and blocks/*.md
  * 2. Register it below
  * 3. Open it from App.vue with <ArticleWindow article-id="articleXX" />
  */
@@ -23,4 +23,9 @@ export function getArticle(id) {
   }
 
   return article
+}
+
+export function getArticleTitle(article) {
+  const header = article.blocks.find((block) => block.type === 'header')
+  return header?.title ?? article.id
 }

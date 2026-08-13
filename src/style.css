@@ -1,5 +1,6 @@
 @import './design/fonts.css';
 @import './design/tokens.css';
+@import './design/type.css';
 
 *,
 *::before,
@@ -7,19 +8,10 @@
   box-sizing: border-box;
 }
 
-html {
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
 html,
 body {
   margin: 0;
   overflow: hidden;
-  line-height: 1.5;
-  color: #1a1a1a;
   background: var(--color-gray);
 }
 

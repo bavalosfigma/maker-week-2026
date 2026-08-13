@@ -1,0 +1,116 @@
+/*
+ * Type system — h1, h2, h3, body, caption
+ *
+ * Change the tokens in :root to adjust typography site-wide.
+ */
+
+:root {
+  --type-family: var(--font-sans);
+  --type-weight: 400;
+  --type-variation: 'wght' 400, 'wdth' 90;
+  --type-leading: 1.2;
+  --type-h1-leading: 0.8;
+  --type-tracking: -0.01em;
+  --type-color: #000;
+
+  --type-h1-size: 48px;
+  --type-h2-size: 24px;
+  --type-h3-size: 14px;
+  --type-body-size: 20px;
+  --type-caption-size: 14px;
+}
+
+html {
+  font-family: var(--type-family);
+  font-weight: var(--type-weight);
+  font-variation-settings: var(--type-variation);
+  font-size: var(--type-body-size);
+  line-height: var(--type-leading);
+  letter-spacing: var(--type-tracking);
+  color: var(--type-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.type-h1,
+.type-h2,
+.type-h3,
+.type-body,
+.type-caption,
+.type-body :where(h1, h2, h3) {
+  font-family: var(--type-family);
+  font-weight: var(--type-weight);
+  font-variation-settings: var(--type-variation);
+  font-size: var(--type-size);
+  line-height: var(--type-line-height, var(--type-leading));
+  letter-spacing: var(--type-tracking);
+  color: var(--type-color);
+  text-transform: var(--type-case);
+}
+
+.type-h1 {
+  --type-size: var(--type-h1-size);
+  --type-case: uppercase;
+  --type-line-height: var(--type-h1-leading);
+}
+
+.type-h2 {
+  --type-size: var(--type-h2-size);
+  --type-case: uppercase;
+}
+
+.type-h3 {
+  --type-size: var(--type-h3-size);
+  --type-case: uppercase;
+}
+
+.type-body {
+  --type-size: var(--type-body-size);
+  --type-case: none;
+}
+
+.type-caption {
+  --type-size: var(--type-caption-size);
+  --type-case: none;
+}
+
+.type-body :where(h1) {
+  --type-size: var(--type-h1-size);
+  --type-case: uppercase;
+  --type-line-height: var(--type-h1-leading);
+}
+
+.type-body :where(h2) {
+  --type-size: var(--type-h2-size);
+  --type-case: uppercase;
+}
+
+.type-body :where(h3) {
+  --type-size: var(--type-h3-size);
+  --type-case: uppercase;
+}
+
+.type-body :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a),
+.type-caption :where(p, ul, ol, li, code, pre, mark, kbd, samp, blockquote, strong, em, a) {
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.type-body :where(code, pre, kbd, samp),
+.type-caption :where(code, pre, kbd, samp) {
+  font-family: var(--type-family);
+}
+
+.type-body :where(li)::marker,
+.type-caption :where(li)::marker {
+  font: inherit;
+  color: inherit;
+}
+
+.type-body :where(mark),
+.type-caption :where(mark) {
+  background: rgb(0 0 0 / 12%);
+}
