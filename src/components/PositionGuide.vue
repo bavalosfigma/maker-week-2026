@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onUnmounted, ref } from 'vue'
+import { COORDINATE_MODES, formatCoordinates } from '../utils/canvasCoords.js'
 
 const MIN_SIZE = 40
 
@@ -16,6 +17,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  coordinateMode: {
+    type: String,
+    default: COORDINATE_MODES.CANVAS,
+  },
+  sizeLabel: {
+    type: Number,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['interacting', 'copy'])
@@ -25,6 +34,14 @@ const screenCenterY = computed(() => centerY.value + props.panY)
 
 const topLeftX = computed(() => centerX.value - size.value / 2)
 const topLeftY = computed(() => centerY.value - size.value / 2)
+
+const coordinateLabel = computed(() =>
+  props.coordinateMode === COORDINATE_MODES.DESIGN ? 'design' : 'canvas',
+)
+
+const displayCoordinates = computed(() =>
+  formatCoordinates(topLeftX.value, topLeftY.value, props.coordinateMode),
+)
 
 const dragMode = ref(null)
 const grabOffsetX = ref(0)
@@ -104,8 +121,9 @@ onUnmounted(endDrag)
     @pointerdown="startMove"
   >
     <span class="position-guide__coords">
-      {{ Math.round(topLeftX) }}, {{ Math.round(topLeftY) }}
-      <span class="position-guide__size">· {{ Math.round(size) }}px</span>
+      <span class="position-guide__mode">{{ coordinateLabel }}</span>
+      {{ displayCoordinates }}
+      <span class="position-guide__size">· {{ sizeLabel }}px</span>
       <button
         type="button"
         class="position-guide__copy"
@@ -195,6 +213,13 @@ onUnmounted(endDrag)
 
 .position-guide__copy:hover {
   background: #ebebeb;
+}
+
+.position-guide__mode {
+  margin-right: 0.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-blue);
 }
 
 .position-guide__size {

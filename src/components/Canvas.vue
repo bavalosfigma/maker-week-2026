@@ -1,8 +1,13 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import PositionGuide from './PositionGuide.vue'
+import {
+  CANVAS_SIZE,
+  COORDINATE_MODES,
+  formatCoordinates,
+  toDesign,
+} from '../utils/canvasCoords.js'
 
-const CANVAS_SIZE = 2000
 const CANVAS_CENTER = CANVAS_SIZE / 2
 
 const panX = ref(0)
@@ -17,15 +22,36 @@ const guideCenterX = ref(CANVAS_CENTER)
 const guideCenterY = ref(CANVAS_CENTER)
 const guideSize = ref(120)
 const copyFeedback = ref(false)
+const coordinateMode = ref(COORDINATE_MODES.CANVAS)
+
+const coordinateModeLabel = computed(() =>
+  coordinateMode.value === COORDINATE_MODES.CANVAS ? 'canvas' : 'design',
+)
+
+function guideTopLeft() {
+  return {
+    x: guideCenterX.value - guideSize.value / 2,
+    y: guideCenterY.value - guideSize.value / 2,
+  }
+}
+
+function guideCoordinatesText() {
+  const { x, y } = guideTopLeft()
+  return formatCoordinates(x, y, coordinateMode.value)
+}
+
+function guideSizeText() {
+  const size = Math.round(guideSize.value)
+
+  if (coordinateMode.value === COORDINATE_MODES.DESIGN) {
+    return toDesign(size)
+  }
+
+  return size
+}
 
 const PAN_EASE = 0.07
 let panAnimationFrame = null
-
-function guideCoordinatesText() {
-  const x = Math.round(guideCenterX.value - guideSize.value / 2)
-  const y = Math.round(guideCenterY.value - guideSize.value / 2)
-  return `${x}, ${y}`
-}
 
 async function copyGuideCoordinates() {
   if (!guideActive.value) return
@@ -138,6 +164,13 @@ function onKeyDown(event) {
     guideActive.value = !guideActive.value
   }
 
+  if (event.key === 'g' || event.key === 'G') {
+    coordinateMode.value =
+      coordinateMode.value === COORDINATE_MODES.CANVAS
+        ? COORDINATE_MODES.DESIGN
+        : COORDINATE_MODES.CANVAS
+  }
+
   if (event.key === 'r' || event.key === 'R') {
     resetGuideToCanvasCenter()
   }
@@ -195,6 +228,8 @@ onUnmounted(() => {
       v-model:size="guideSize"
       :pan-x="panX"
       :pan-y="panY"
+      :coordinate-mode="coordinateMode"
+      :size-label="guideSizeText()"
       @interacting="guideInteracting = $event"
       @copy="copyGuideCoordinates"
     />
@@ -203,6 +238,8 @@ onUnmounted(() => {
       v-if="guideActive"
       class="canvas-hud"
     >
+      {{ coordinateModeLabel }} coords ·
+      <kbd>G</kbd> switch mode ·
       Drag to move · corner to resize ·
       <kbd>C</kbd> copy top-left ·
       <kbd>R</kbd> center canvas ·

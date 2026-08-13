@@ -10,18 +10,12 @@ import { provideWindowStack } from './composables/useWindowStack.js'
 import { playOpenBlip } from './composables/useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
 import { assetUrl } from './utils/assetUrl.js'
+import { CANVAS_SIZE, toCanvas } from './utils/canvasCoords.js'
 
 const windowStack = provideWindowStack()
 
-const CANVAS_SIZE = 2000
 const CANVAS_CENTER = CANVAS_SIZE / 2
-const CANVAS_SCALE = CANVAS_SIZE / 2400
-
-function sc(value) {
-  return Math.round(value * CANVAS_SCALE)
-}
-
-const ITEM_SIZE = sc(600)
+const ITEM_SIZE = Math.round(toCanvas(600) * 1.25)
 const itemOffset = CANVAS_CENTER - ITEM_SIZE / 2
 
 const article01Open = ref(false)
@@ -30,31 +24,56 @@ const ambient01Open = ref(false)
 const ambient02Open = ref(false)
 const ambient03Open = ref(false)
 const coritaOpen = ref(false)
+const animation01Open = ref(false)
+
+const AMBIENT_STAGGER_MS = 200
+const ambientTimeouts = []
+
+function clearAmbientTimeouts() {
+  for (const timeoutId of ambientTimeouts) {
+    window.clearTimeout(timeoutId)
+  }
+
+  ambientTimeouts.length = 0
+}
+
+function staggerAmbientOpens(entries) {
+  entries.forEach(({ windowId, openRef }, index) => {
+    const timeoutId = window.setTimeout(() => {
+      openRef.value = true
+
+      nextTick(() => {
+        windowStack.bringToFront(windowId)
+      })
+    }, AMBIENT_STAGGER_MS * (index + 1))
+
+    ambientTimeouts.push(timeoutId)
+  })
+}
 
 function openBook01() {
   playOpenBlip()
   maybePlayRecordOnArticleOpen()
+  clearAmbientTimeouts()
   article01Open.value = true
-  ambient01Open.value = true
-  ambient02Open.value = true
-  coritaOpen.value = true
 
-  nextTick(() => {
-    windowStack.bringToFront('ambient01')
-    windowStack.bringToFront('ambient02')
-    windowStack.bringToFront('coritakent')
-  })
+  staggerAmbientOpens([
+    { windowId: 'ambient01', openRef: ambient01Open },
+    { windowId: 'ambient02', openRef: ambient02Open },
+    { windowId: 'coritakent', openRef: coritaOpen },
+  ])
 }
 
 function openBook03() {
   playOpenBlip()
   maybePlayRecordOnArticleOpen()
+  clearAmbientTimeouts()
   article02Open.value = true
-  ambient03Open.value = true
 
-  nextTick(() => {
-    windowStack.bringToFront('ambient03')
-  })
+  staggerAmbientOpens([
+    { windowId: 'ambient03', openRef: ambient03Open },
+    { windowId: 'animation01', openRef: animation01Open },
+  ])
 }
 </script>
 
@@ -67,70 +86,70 @@ function openBook03() {
       :size="ITEM_SIZE"
     />
     <CanvasItem
-      :left="sc(1484)"
-      :top="sc(913)"
-      :width="sc(400)"
+      :left="1304"
+      :top="849"
+      :width="400"
       :src="assetUrl('canvas/book01.png')"
       alt="Open book spread"
       @click="openBook01"
     />
     <CanvasItem
-      :left="sc(1462)"
-      :top="sc(1292)"
-      :width="sc(300)"
+      :left="1270"
+      :top="1208"
+      :width="250"
       :hover="false"
       :src="assetUrl('canvas/pencils.png')"
       alt="Pencils"
     />
     <CanvasItem
-      :left="sc(670)"
-      :top="sc(1470)"
-      :width="sc(200)"
+      :left="558"
+      :top="1225"
+      :width="167"
       :rotate="-4"
       :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
     <CanvasItem
-      :left="sc(766)"
-      :top="sc(1500)"
-      :width="sc(200)"
+      :left="638"
+      :top="1250"
+      :width="167"
       :rotate="3"
       :src="assetUrl('canvas/collage02.png')"
       alt="Collage 02"
     />
     <CanvasItem
-      :left="sc(600)"
-      :top="sc(1629)"
-      :width="sc(200)"
+      :left="500"
+      :top="1358"
+      :width="167"
       :rotate="-3"
       :src="assetUrl('canvas/collage03.png')"
       alt="Collage 03"
     />
     <CanvasItem
-      :left="sc(726)"
-      :top="sc(985)"
-      :width="sc(200)"
+      :left="605"
+      :top="821"
+      :width="167"
       :src="assetUrl('canvas/scissors.png')"
       alt="Scissors"
     />
     <CanvasItem
-      :left="sc(1039)"
-      :top="sc(861)"
-      :width="sc(400)"
+      :left="866"
+      :top="718"
+      :width="333"
       :src="assetUrl('canvas/ruler.png')"
       alt="Ruler"
     />
     <CanvasItem
-      :left="sc(993)"
-      :top="sc(1424)"
-      :width="sc(400)"
+      :left="828"
+      :top="1245"
+      :width="333"
       :src="assetUrl('canvas/sketchbook.png')"
       alt="Sketchbook"
     />
     <CanvasItem
-      :left="sc(282)"
-      :top="sc(957)"
-      :width="sc(400)"
+      :left="189"
+      :top="829"
+      :width="400"
       :src="assetUrl('canvas/book03.png')"
       alt="Book 03"
       @click="openBook03"
@@ -170,6 +189,14 @@ function openBook03() {
     window-id="ambient03"
     :src="assetUrl('canvas/ambient03.png')"
     alt="Ambient texture 03"
-    :width="200"
+    :width="320"
+  />
+  <AmbientWindow
+    v-model:open="animation01Open"
+    window-id="animation01"
+    :src="assetUrl('canvas/animation01.mp4')"
+    alt="Animation 01"
+    :width="250"
+    video
   />
 </template>

@@ -22,9 +22,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  video: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const open = defineModel('open', { type: Boolean, default: false })
+const videoEl = ref(null)
 const { zIndex, focusWindow } = useWindowStack(props.windowId)
 const panelPosition = ref({ top: 80, left: 80 })
 const panelHeight = ref(props.width)
@@ -57,6 +62,29 @@ function onImageLoad(event) {
   }
 }
 
+function onVideoMetadata(event) {
+  const { videoWidth, videoHeight } = event.target
+
+  if (!videoWidth) return
+
+  panelHeight.value = Math.round(props.width * (videoHeight / videoWidth))
+
+  if (open.value) {
+    randomizePosition()
+  }
+}
+
+function syncVideoPlayback(shouldPlay) {
+  const video = videoEl.value
+  if (!video) return
+
+  if (shouldPlay) {
+    video.play().catch(() => {})
+  } else {
+    video.pause()
+  }
+}
+
 function close() {
   playCloseBlip()
   open.value = false
@@ -72,7 +100,11 @@ watch(open, (isOpen) => {
   if (isOpen) {
     randomizePosition()
     focusWindow()
+    syncVideoPlayback(true)
+    return
   }
+
+  syncVideoPlayback(false)
 })
 
 onMounted(() => {
@@ -104,7 +136,20 @@ onUnmounted(() => {
           :aria-label="closeLabel"
           @click="close"
         />
+        <video
+          v-if="video"
+          ref="videoEl"
+          class="ambient-window__image"
+          :src="src"
+          :aria-label="alt"
+          autoplay
+          loop
+          muted
+          playsinline
+          @loadedmetadata="onVideoMetadata"
+        />
         <img
+          v-else
           class="ambient-window__image"
           :src="src"
           :alt="alt"

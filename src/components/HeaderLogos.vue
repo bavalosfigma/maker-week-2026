@@ -11,7 +11,7 @@ const introHtml = computed(() => marked.parse(intro))
     class="header-logos"
     aria-label="Rules for making"
   >
-    <h2 class="header-logos__rules">rules</h2>
+    <h2 class="header-logos__rules">principles</h2>
     <h2 class="header-logos__for">for</h2>
     <div
       class="header-logos__intro"
