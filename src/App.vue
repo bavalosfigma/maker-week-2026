@@ -103,14 +103,14 @@ function openBook03() {
     />
     <CanvasItem
       :left="558"
-      :top="1225"
+      :top="1125"
       :width="167"
       :rotate="-4"
       :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
     <CanvasItem
-      :left="638"
+      :left="358"
       :top="1250"
       :width="167"
       :rotate="3"
@@ -119,7 +119,7 @@ function openBook03() {
     />
     <CanvasItem
       :left="500"
-      :top="1358"
+      :top="1258"
       :width="167"
       :rotate="-3"
       :src="assetUrl('canvas/collage03.png')"
