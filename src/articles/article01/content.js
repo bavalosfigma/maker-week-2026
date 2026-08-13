@@ -13,7 +13,7 @@ import section12 from './blocks/12-start-tonight.js'
 export default [
   {
     type: 'header',
-    eyebrow: 'principle 01',
+    eyebrow: '1',
     title: 'Look towards something else',
   },
   {

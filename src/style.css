@@ -109,15 +109,22 @@ body {
 
 .article-panel-enter-from,
 .article-panel-down-enter-from {
-  transform: translateY(100vh);
+  transform: translateY(100vh) rotate(2deg);
+}
+
+.article-panel-enter-to,
+.article-panel-down-enter-to,
+.article-panel-leave-from,
+.article-panel-down-leave-from {
+  transform: translateY(0) rotate(0deg);
 }
 
 .article-panel-leave-to {
-  transform: translateY(-100%);
+  transform: translateY(-100%) rotate(-2deg);
 }
 
 .article-panel-down-leave-to {
-  transform: translateY(100vh);
+  transform: translateY(100vh) rotate(2deg);
 }
 
 .image-treatment {

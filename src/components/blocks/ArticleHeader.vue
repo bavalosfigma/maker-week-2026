@@ -25,7 +25,7 @@ defineProps({
       v-if="eyebrow"
       class="article-header__eyebrow type-h3"
     >
-      {{ eyebrow }}
+      <span class="article-header__numeral">{{ eyebrow }}</span>
     </p>
     <h1
       :id="titleId || undefined"
@@ -49,8 +49,21 @@ defineProps({
 }
 
 .article-header__eyebrow {
+  display: flex;
+  justify-content: center;
   margin: 0 0 0.75rem;
-  text-align: center;
+}
+
+.article-header__numeral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid #000;
+  border-radius: 50%;
+  line-height: 1;
 }
 
 .article-header__title {

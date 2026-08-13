@@ -11,7 +11,7 @@ import section10 from './blocks/10-start-tonight.js'
 export default [
   {
     type: 'header',
-    eyebrow: 'principle 02',
+    eyebrow: '2',
     title: 'Make What You Know',
   },
   {
