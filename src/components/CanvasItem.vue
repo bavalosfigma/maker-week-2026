@@ -3,6 +3,7 @@
     class="canvas-item"
     :class="{
       'canvas-item--no-hover': !hover,
+      'canvas-item--cropped': !!croppedLayout,
     }"
     :style="positionStyle"
     @click="$emit('click', $event)"
@@ -12,7 +13,8 @@
       :src="src"
       :alt="alt"
       class="canvas-item__image"
-      :class="{ 'canvas-item__image--auto-height': !height }"
+      :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
+      :style="imageStyle"
     >
     <slot v-else />
   </div>
@@ -20,6 +22,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { getCroppedLayout, getImageCrop } from '../utils/imageCrops.js'
 
 const props = defineProps({
   left: {
@@ -66,11 +69,26 @@ const props = defineProps({
 
 defineEmits(['click'])
 
+const imageCrop = computed(() => getImageCrop(props.src))
+
+const croppedLayout = computed(() => {
+  if (!imageCrop.value || !props.width) return null
+
+  return getCroppedLayout(imageCrop.value, props.width)
+})
+
+const imageStyle = computed(() => croppedLayout.value?.imageStyle)
+
 const positionStyle = computed(() => {
-  const size = {
-    width: props.width ? `${props.width}px` : undefined,
-    height: props.height ? `${props.height}px` : undefined,
-  }
+  const size = croppedLayout.value
+    ? {
+        width: `${croppedLayout.value.containerWidth}px`,
+        height: `${croppedLayout.value.containerHeight}px`,
+      }
+    : {
+        width: props.width ? `${props.width}px` : undefined,
+        height: props.height ? `${props.height}px` : undefined,
+      }
 
   const transforms = []
   if (props.centerX != null && props.centerY != null) {
@@ -101,11 +119,22 @@ const positionStyle = computed(() => {
 </script>
 
 <style scoped>
+.canvas-item--cropped {
+  overflow: hidden;
+}
+
 .canvas-item__image {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.canvas-item--cropped .canvas-item__image {
+  max-width: none;
+  width: auto;
+  height: auto;
+  object-fit: unset;
 }
 
 .canvas-item__image--auto-height {

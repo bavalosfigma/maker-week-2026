@@ -10,13 +10,17 @@ import { provideWindowStack } from './composables/useWindowStack.js'
 import { playOpenBlip } from './composables/useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
 import { assetUrl } from './utils/assetUrl.js'
-import { CANVAS_SIZE, toCanvas } from './utils/canvasCoords.js'
+import { CANVAS_SIZE } from './utils/canvasCoords.js'
+import { getCroppedLayout, getImageCrop } from './utils/imageCrops.js'
 
 const windowStack = provideWindowStack()
 
 const CANVAS_CENTER = CANVAS_SIZE / 2
-const ITEM_SIZE = Math.round(toCanvas(600) * 1.25)
-const itemOffset = CANVAS_CENTER - ITEM_SIZE / 2
+const RECORD_SIZE = 460
+const recordCrop = getImageCrop('canvas/record.png')
+const recordLayout = getCroppedLayout(recordCrop, RECORD_SIZE)
+const recordLeft = CANVAS_CENTER - recordLayout.containerWidth / 2
+const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
 
 const article01Open = ref(false)
 const article02Open = ref(false)
@@ -81,54 +85,54 @@ function openBook03() {
   <HeaderLogos />
   <Canvas>
     <RecordPlayer
-      :left="itemOffset"
-      :top="itemOffset"
-      :size="ITEM_SIZE"
+      :left="recordLeft"
+      :top="recordTop"
+      :size="RECORD_SIZE"
     />
     <CanvasItem
-      :left="1304"
+      :left="1404"
       :top="849"
-      :width="480"
+      :width="400"
       :src="assetUrl('canvas/book01.png')"
       alt="Open book spread"
       @click="openBook01"
     />
     <CanvasItem
-      :left="1228"
-      :top="1228"
+      :left="1288"
+      :top="1288"
       :width="300"
       :hover="false"
       :src="assetUrl('canvas/pencils.png')"
       alt="Pencils"
     />
     <CanvasItem
-      :left="558"
-      :top="1125"
+      :left="498"
+      :top="1185"
       :width="167"
       :rotate="-4"
       :src="assetUrl('canvas/collage01.png')"
       alt="Collage 01"
     />
     <CanvasItem
-      :left="358"
-      :top="1250"
+      :left="298"
+      :top="1310"
       :width="167"
       :rotate="3"
       :src="assetUrl('canvas/collage02.png')"
       alt="Collage 02"
     />
     <CanvasItem
-      :left="500"
-      :top="1258"
+      :left="440"
+      :top="1318"
       :width="167"
       :rotate="-3"
       :src="assetUrl('canvas/collage03.png')"
       alt="Collage 03"
     />
     <CanvasItem
-      :left="561"
-      :top="765"
-      :width="167"
+      :left="613"
+      :top="909"
+      :width="80"
       :src="assetUrl('canvas/scissors.png')"
       alt="Scissors"
     />
@@ -141,7 +145,7 @@ function openBook03() {
     />
     <CanvasItem
       :left="828"
-      :top="1245"
+      :top="1295"
       :width="333"
       :src="assetUrl('canvas/sketchbook.png')"
       alt="Sketchbook"

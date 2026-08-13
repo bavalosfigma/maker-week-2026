@@ -14,8 +14,7 @@ const panX = ref(0)
 const panY = ref(0)
 const targetPanX = ref(0)
 const targetPanY = ref(0)
-const mouseX = ref(0)
-const mouseY = ref(0)
+const isPanning = ref(false)
 const guideActive = ref(false)
 const guideInteracting = ref(false)
 const guideCenterX = ref(CANVAS_CENTER)
@@ -52,6 +51,12 @@ function guideSizeText() {
 
 const PAN_EASE = 0.07
 let panAnimationFrame = null
+const panDragStart = {
+  x: 0,
+  y: 0,
+  panX: 0,
+  panY: 0,
+}
 
 async function copyGuideCoordinates() {
   if (!guideActive.value) return
@@ -119,6 +124,16 @@ function stopPanAnimation() {
   panAnimationFrame = null
 }
 
+function clampPan(x, y) {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+
+  return {
+    x: clampPanValue(x, vw),
+    y: clampPanValue(y, vh),
+  }
+}
+
 function panToCanvasPoint(x, y) {
   const vw = window.innerWidth
   const vh = window.innerHeight
@@ -129,24 +144,51 @@ function panToCanvasPoint(x, y) {
   )
 }
 
-function clampPanFromMouse(clientX, clientY) {
-  if (guideInteracting.value) return
+function shouldStartPan(event) {
+  if (guideInteracting.value) return false
+  if (event.button !== 0) return false
+  if (event.target.closest('.canvas-item')) return false
+  if (event.target.closest('.position-guide')) return false
 
-  const vw = window.innerWidth
-  const vh = window.innerHeight
-  const minPanX = Math.min(0, vw - CANVAS_SIZE)
-  const minPanY = Math.min(0, vh - CANVAS_SIZE)
-
-  setPanTargets(
-    (clientX / vw) * minPanX,
-    (clientY / vh) * minPanY,
-  )
+  return true
 }
 
-function onMouseMove(event) {
-  mouseX.value = event.clientX
-  mouseY.value = event.clientY
-  clampPanFromMouse(event.clientX, event.clientY)
+function onPointerDown(event) {
+  if (!shouldStartPan(event)) return
+
+  isPanning.value = true
+  panDragStart.x = event.clientX
+  panDragStart.y = event.clientY
+  panDragStart.panX = panX.value
+  panDragStart.panY = panY.value
+  stopPanAnimation()
+  event.currentTarget.setPointerCapture(event.pointerId)
+}
+
+function onPointerMove(event) {
+  if (!isPanning.value) return
+
+  const dx = event.clientX - panDragStart.x
+  const dy = event.clientY - panDragStart.y
+  const nextPan = clampPan(
+    panDragStart.panX + dx,
+    panDragStart.panY + dy,
+  )
+
+  panX.value = nextPan.x
+  panY.value = nextPan.y
+  targetPanX.value = nextPan.x
+  targetPanY.value = nextPan.y
+}
+
+function endPan(event) {
+  if (!isPanning.value) return
+
+  isPanning.value = false
+
+  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+    event.currentTarget.releasePointerCapture(event.pointerId)
+  }
 }
 
 function resetGuideToCanvasCenter() {
@@ -189,27 +231,30 @@ function centerView() {
     clampPanValue(vw / 2 - guideCenterX.value, vw),
     clampPanValue(vh / 2 - guideCenterY.value, vh),
   )
-  mouseX.value = window.innerWidth / 2
-  mouseY.value = window.innerHeight / 2
 }
 
 onMounted(() => {
   centerView()
-  window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('keydown', onKeyDown)
   window.addEventListener('resize', centerView)
 })
 
 onUnmounted(() => {
   stopPanAnimation()
-  window.removeEventListener('mousemove', onMouseMove)
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('resize', centerView)
 })
 </script>
 
 <template>
-  <div class="canvas-viewport">
+  <div
+    class="canvas-viewport"
+    :class="{ 'canvas-viewport--panning': isPanning }"
+    @pointerdown="onPointerDown"
+    @pointermove="onPointerMove"
+    @pointerup="endPan"
+    @pointercancel="endPan"
+  >
     <div
       class="canvas-surface"
       :style="{
@@ -257,8 +302,14 @@ onUnmounted(() => {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  cursor: crosshair;
+  cursor: grab;
+  touch-action: none;
   background: var(--color-gray);
+}
+
+.canvas-viewport--panning {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .canvas-surface {
