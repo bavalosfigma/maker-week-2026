@@ -1,0 +1,116 @@
+<template>
+  <div
+    class="canvas-item"
+    :class="{
+      'canvas-item--no-hover': !hover,
+      'canvas-item--table-shadow': tableShadow,
+    }"
+    :style="positionStyle"
+  >
+    <img
+      v-if="src"
+      :src="src"
+      :alt="alt"
+      class="canvas-item__image"
+      :class="{ 'canvas-item__image--auto-height': !height }"
+    >
+    <slot v-else />
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  left: {
+    type: Number,
+    default: null,
+  },
+  top: {
+    type: Number,
+    default: null,
+  },
+  centerX: {
+    type: Number,
+    default: null,
+  },
+  centerY: {
+    type: Number,
+    default: null,
+  },
+  width: {
+    type: Number,
+    default: null,
+  },
+  height: {
+    type: Number,
+    default: null,
+  },
+  src: {
+    type: String,
+    default: null,
+  },
+  alt: {
+    type: String,
+    default: '',
+  },
+  hover: {
+    type: Boolean,
+    default: true,
+  },
+  rotate: {
+    type: Number,
+    default: 0,
+  },
+  tableShadow: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const positionStyle = computed(() => {
+  const size = {
+    width: props.width ? `${props.width}px` : undefined,
+    height: props.height ? `${props.height}px` : undefined,
+  }
+
+  const transforms = []
+  if (props.centerX != null && props.centerY != null) {
+    transforms.push('translate(-50%, -50%)')
+  }
+  if (props.rotate) {
+    transforms.push(`rotate(${props.rotate}deg)`)
+  }
+
+  const transform = transforms.length ? transforms.join(' ') : undefined
+
+  if (props.centerX != null && props.centerY != null) {
+    return {
+      left: `${props.centerX}px`,
+      top: `${props.centerY}px`,
+      transform,
+      ...size,
+    }
+  }
+
+  return {
+    left: `${props.left}px`,
+    top: `${props.top}px`,
+    transform,
+    ...size,
+  }
+})
+</script>
+
+<style scoped>
+.canvas-item__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.canvas-item__image--auto-height {
+  height: auto;
+}
+</style>
