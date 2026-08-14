@@ -73,28 +73,29 @@ body {
   -webkit-user-drag: none;
 }
 
+/*
+ * Windows fly in from, and back out to, a random point past the viewport edge.
+ * The heading is handed over per window as --slide-x / --slide-y / --slide-rotate.
+ */
 .window-zen-enter-active {
-  transition:
-    opacity var(--window-enter-duration) var(--window-ease-enter),
-    transform var(--window-enter-duration) var(--window-ease-enter);
+  transition: transform var(--window-enter-duration) var(--window-ease-enter);
+  will-change: transform;
 }
 
 .window-zen-leave-active {
-  transition:
-    opacity var(--window-leave-duration) var(--window-ease-leave),
-    transform var(--window-leave-duration) var(--window-ease-leave);
+  transition: transform var(--window-leave-duration) var(--window-ease-leave);
+  will-change: transform;
+  pointer-events: none;
 }
 
 .window-zen-enter-from,
 .window-zen-leave-to {
-  opacity: 0;
-  transform: translateY(18px);
+  transform: translate(var(--slide-x, 0px), var(--slide-y, 0px)) rotate(var(--slide-rotate, 0deg));
 }
 
 .window-zen-enter-to,
 .window-zen-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translate(0, 0) rotate(0deg);
 }
 
 .article-panel-enter-active,

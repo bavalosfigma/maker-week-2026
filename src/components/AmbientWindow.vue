@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
+import { getOffscreenOffset } from '../utils/offscreenSlide.js'
 import WindowCloseButton from './WindowCloseButton.vue'
 import WindowCaption from './WindowCaption.vue'
 
@@ -47,12 +48,28 @@ const videoEl = ref(null)
 const { zIndex, focusWindow } = useWindowStack(props.windowId)
 const panelPosition = ref({ top: 80, left: 80 })
 const panelHeight = ref(props.width)
+const slideOffset = ref({ x: 0, y: 0, rotate: 0 })
 const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(panelPosition, {
   onDragStart: focusWindow,
 })
 
 const closeLabel = computed(() => `Close ${props.alt || 'image'}`)
 const captionLabel = computed(() => props.caption || props.alt || props.windowId)
+
+const slideStyle = computed(() => ({
+  '--slide-x': `${slideOffset.value.x}px`,
+  '--slide-y': `${slideOffset.value.y}px`,
+  '--slide-rotate': `${slideOffset.value.rotate}deg`,
+}))
+
+function randomizeSlideOffset(position) {
+  slideOffset.value = getOffscreenOffset({
+    left: position.left,
+    top: position.top,
+    width: props.width,
+    height: panelHeight.value,
+  })
+}
 
 function randomRange(min, max) {
   return min + Math.random() * Math.max(0, max - min)
@@ -78,6 +95,7 @@ function randomizePosition() {
     top: Math.min(maxTop, Math.max(inset, top)),
     left: Math.min(maxLeft, Math.max(minLeft, left)),
   }
+  randomizeSlideOffset(panelPosition.value)
   snapPosition()
 }
 
@@ -135,6 +153,10 @@ watch(open, (isOpen) => {
     return
   }
 
+  // Recompute the exit heading before the leave transition renders, so the
+  // window slides off toward its nearest edge whether it was closed by hand or
+  // swept out alongside its article.
+  randomizeSlideOffset(displayPosition.value)
   syncVideoPlayback(false)
 })
 
@@ -155,6 +177,7 @@ onUnmounted(() => {
         left: `${displayPosition.left}px`,
         width: `${width}px`,
         zIndex: zIndex,
+        ...slideStyle,
       }" @mouseenter="focusWindow" @pointerdown="startDrag">
         <WindowCloseButton :aria-label="closeLabel" @click="close" />
         <video v-if="video" ref="videoEl" class="ambient-window__image" :src="src" :aria-label="alt" autoplay loop muted

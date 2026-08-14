@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import AmbientWindow from './components/AmbientWindow.vue'
 import ArticleWindow from './components/ArticleWindow.vue'
 import Canvas from './components/Canvas.vue'
@@ -35,6 +35,16 @@ const animation01Open = ref(false)
 const AMBIENT_STAGGER_MS = 200
 const ambientTimeouts = []
 
+const article01Ambients = [
+  { windowId: 'ambient01', openRef: ambient01Open },
+  { windowId: 'ambient02', openRef: ambient02Open },
+]
+
+const article02Ambients = [
+  { windowId: 'ambient03', openRef: ambient03Open },
+  { windowId: 'animation01', openRef: animation01Open },
+]
+
 function clearAmbientTimeouts() {
   for (const timeoutId of ambientTimeouts) {
     window.clearTimeout(timeoutId)
@@ -57,16 +67,23 @@ function staggerAmbientOpens(entries) {
   })
 }
 
+function staggerAmbientCloses(entries) {
+  entries.forEach(({ openRef }, index) => {
+    const timeoutId = window.setTimeout(() => {
+      openRef.value = false
+    }, AMBIENT_STAGGER_MS * index)
+
+    ambientTimeouts.push(timeoutId)
+  })
+}
+
 function openArticle01() {
   playOpenBlip()
   maybePlayRecordOnArticleOpen()
   clearAmbientTimeouts()
   article01Open.value = true
 
-  staggerAmbientOpens([
-    { windowId: 'ambient01', openRef: ambient01Open },
-    { windowId: 'ambient02', openRef: ambient02Open },
-  ])
+  staggerAmbientOpens(article01Ambients)
 }
 
 function openArticle02() {
@@ -75,11 +92,24 @@ function openArticle02() {
   clearAmbientTimeouts()
   article02Open.value = true
 
-  staggerAmbientOpens([
-    { windowId: 'ambient03', openRef: ambient03Open },
-    { windowId: 'animation01', openRef: animation01Open },
-  ])
+  staggerAmbientOpens(article02Ambients)
 }
+
+// An article's companion windows belong to it, so they shuffle away when the
+// article closes — whether dismissed by hand or read past its close line.
+watch(article01Open, (isOpen) => {
+  if (isOpen) return
+
+  clearAmbientTimeouts()
+  staggerAmbientCloses(article01Ambients)
+})
+
+watch(article02Open, (isOpen) => {
+  if (isOpen) return
+
+  clearAmbientTimeouts()
+  staggerAmbientCloses(article02Ambients)
+})
 </script>
 
 <template>
