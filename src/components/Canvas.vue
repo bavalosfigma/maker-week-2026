@@ -357,9 +357,9 @@ onUnmounted(() => {
       }"
     >
       <slot />
-    </div>
 
-    <CanvasTexture />
+      <CanvasTexture />
+    </div>
 
     <PositionGuide
       v-if="guideActive"
