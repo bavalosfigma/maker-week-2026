@@ -6,8 +6,8 @@ import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useWindowStack } from '../composables/useWindowStack.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import ArticleBlocks from './blocks/ArticleBlocks.vue'
-import WindowCloseButton from './WindowCloseButton.vue'
 import WindowCaption from './WindowCaption.vue'
+import WindowCloseButton from './WindowCloseButton.vue'
 
 const DEFAULT_REST_TOP_RATIO = 0.2
 

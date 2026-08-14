@@ -4,7 +4,6 @@ import { useWindowStack } from '../composables/useWindowStack.js'
 import { useWindowDrag } from '../composables/useWindowDrag.js'
 import { playCloseBlip } from '../composables/useBlipSound.js'
 import { getOffscreenOffset } from '../utils/offscreenSlide.js'
-import WindowCloseButton from './WindowCloseButton.vue'
 import WindowCaption from './WindowCaption.vue'
 
 const props = defineProps({
@@ -53,7 +52,6 @@ const { isDragging, displayPosition, startDrag, snapPosition } = useWindowDrag(p
   onDragStart: focusWindow,
 })
 
-const closeLabel = computed(() => `Close ${props.alt || 'image'}`)
 const captionLabel = computed(() => props.caption || props.alt || props.windowId)
 
 const slideStyle = computed(() => ({
@@ -179,7 +177,6 @@ onUnmounted(() => {
         zIndex: zIndex,
         ...slideStyle,
       }" @mouseenter="focusWindow" @pointerdown="startDrag">
-        <WindowCloseButton :aria-label="closeLabel" @click="close" />
         <video v-if="video" ref="videoEl" class="ambient-window__image" :src="src" :aria-label="alt" autoplay loop muted
           playsinline @loadedmetadata="onVideoMetadata" />
         <img v-else class="ambient-window__image" :src="src" :alt="alt" draggable="false" @load="onImageLoad">
