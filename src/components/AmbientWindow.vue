@@ -186,43 +186,14 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/*
- * Translucent vellum: a milky warm sheet that diffuses the canvas behind it
- * rather than hiding it, with the image multiplied into the stock so it reads
- * as printed on the sheet instead of framed by it.
- */
 .ambient-window {
-  --vellum-stock: 250 247 238;
-  --vellum-density: 0%;
-  --vellum-diffusion: 1px;
-  --vellum-ink: 1;
-
   position: fixed;
   padding: 0;
   overflow: hidden;
-  background: rgb(var(--vellum-stock) / var(--vellum-density));
-  backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.85) brightness(1.04);
-  -webkit-backdrop-filter: blur(var(--vellum-diffusion)) saturate(0.85) brightness(1.04);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 45%),
-    inset 0 0 28px rgb(122 112 92 / 12%),
-    0 2px 10px rgb(0 0 0 / 8%);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;
   user-select: none;
-}
-
-/* Paper tooth across the whole sheet, including the bare rim. */
-.ambient-window::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' result='n'/%3E%3CfeColorMatrix in='n' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23v)'/%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  opacity: 0.22;
-  mix-blend-mode: multiply;
-  pointer-events: none;
 }
 
 .ambient-window--dragging {
@@ -234,9 +205,6 @@ onUnmounted(() => {
   display: block;
   width: 100%;
   height: auto;
-  opacity: var(--vellum-ink);
-  mix-blend-mode: multiply;
-  filter: url('#grain') saturate(0.88) contrast(0.94);
   pointer-events: none;
   -webkit-user-drag: none;
   user-select: none;

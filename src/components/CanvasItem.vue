@@ -1,34 +1,20 @@
 <template>
-  <div
-    class="canvas-item"
-    :class="{
-      'canvas-item--no-hover': !hover || !interactive,
-      'canvas-item--decorative': !interactive,
-      'canvas-item--numbered': badge != null,
-      'canvas-item--cropped': !!croppedLayout,
-    }"
-    :style="{
+  <div class="canvas-item" :class="{
+    'canvas-item--no-hover': !hover || !interactive,
+    'canvas-item--decorative': !interactive,
+    'canvas-item--numbered': badge != null,
+    'canvas-item--cropped': !!croppedLayout,
+  }" :style="{
       ...positionStyle,
       '--badge-offset-x': `${badgeOffsetX}px`,
       '--badge-offset-y': `${badgeOffsetY}px`,
-    }"
-    @click="onClick"
-  >
+    }" @click="onClick">
     <div v-if="src" class="canvas-item__frame" :style="frameStyle">
-      <img
-        :src="src"
-        :alt="alt"
-        class="canvas-item__image"
-        :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
-        :style="imageStyle"
-      >
+      <img :src="src" :alt="alt" class="canvas-item__image"
+        :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }" :style="imageStyle">
     </div>
     <slot v-else />
-    <span
-      v-if="badge"
-      class="canvas-item__badge type-h3"
-      aria-hidden="true"
-    >{{ badge }}</span>
+    <span v-if="badge" class="canvas-item__badge type-h3" aria-hidden="true">{{ badge }}</span>
   </div>
 </template>
 
@@ -121,13 +107,13 @@ const frameStyle = computed(() => (
 const positionStyle = computed(() => {
   const size = croppedLayout.value
     ? {
-        width: `${croppedLayout.value.containerWidth}px`,
-        height: `${croppedLayout.value.containerHeight}px`,
-      }
+      width: `${croppedLayout.value.containerWidth}px`,
+      height: `${croppedLayout.value.containerHeight}px`,
+    }
     : {
-        width: props.width ? `${props.width}px` : undefined,
-        height: props.height ? `${props.height}px` : undefined,
-      }
+      width: props.width ? `${props.width}px` : undefined,
+      height: props.height ? `${props.height}px` : undefined,
+    }
 
   if (props.centerX != null && props.centerY != null) {
     return {
