@@ -37,7 +37,8 @@ const { zIndex, focusWindow, isFrontmostAmong } = useWindowStack(props.articleId
 const panelWidth = computed(() => article.value.layout.width)
 const restTopRatio = computed(() => article.value.layout.top ?? DEFAULT_REST_TOP_RATIO)
 const leftOffset = computed(() => article.value.layout.leftOffset ?? 0)
-const restTop = computed(() => viewportHeight.value * restTopRatio.value)
+const topOffset = computed(() => article.value.layout.topOffset ?? 0)
+const restTop = computed(() => viewportHeight.value * restTopRatio.value + topOffset.value)
 const restLeft = computed(() => {
   const width = Math.min(panelWidth.value, window.innerWidth - 48)
   return Math.max(24, (window.innerWidth - width) / 2 + leftOffset.value)

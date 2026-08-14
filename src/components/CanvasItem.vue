@@ -6,19 +6,27 @@
       'canvas-item--decorative': !interactive,
       'canvas-item--cropped': !!croppedLayout,
     }"
-    :style="positionStyle"
+    :style="{
+      ...positionStyle,
+      '--badge-offset-y': `${badgeOffsetY}px`,
+    }"
     @click="onClick"
   >
-    <img
-      v-if="src"
-      :src="src"
-      :alt="alt"
-      class="canvas-item__image"
-      :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
-      :style="imageStyle"
-    >
+    <div v-if="src" class="canvas-item__frame">
+      <img
+        :src="src"
+        :alt="alt"
+        class="canvas-item__image"
+        :class="{ 'canvas-item__image--auto-height': !height && !croppedLayout }"
+        :style="imageStyle"
+      >
+    </div>
     <slot v-else />
-    <span v-if="badge" class="canvas-item__badge type-h3" aria-hidden="true">{{ badge }}</span>
+    <span
+      v-if="badge"
+      class="canvas-item__badge type-h3"
+      aria-hidden="true"
+    >{{ badge }}</span>
   </div>
 </template>
 
@@ -62,6 +70,10 @@ const props = defineProps({
   badge: {
     type: [String, Number],
     default: null,
+  },
+  badgeOffsetY: {
+    type: Number,
+    default: 0,
   },
   hover: {
     type: Boolean,
@@ -135,7 +147,13 @@ const positionStyle = computed(() => {
 </script>
 
 <style scoped>
-.canvas-item--cropped {
+.canvas-item__frame {
+  width: 100%;
+  height: 100%;
+}
+
+/* The crop is clipped by the frame, not the item, so the badge can sit outside. */
+.canvas-item--cropped .canvas-item__frame {
   overflow: hidden;
 }
 
@@ -165,8 +183,8 @@ const positionStyle = computed(() => {
 
 .canvas-item__badge {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
+  top: calc(100% + 8px + var(--badge-offset-y, 0px));
+  left: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;

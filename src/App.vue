@@ -27,6 +27,9 @@ const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
 
 const article01Open = ref(false)
 const article02Open = ref(false)
+const article03Open = ref(false)
+const article04Open = ref(false)
+const article05Open = ref(false)
 const ambient01Open = ref(false)
 const ambient02Open = ref(false)
 const ambient03Open = ref(false)
@@ -95,6 +98,27 @@ function openArticle02() {
   staggerAmbientOpens(article02Ambients)
 }
 
+function openArticle03() {
+  playOpenBlip()
+  maybePlayRecordOnArticleOpen()
+  clearAmbientTimeouts()
+  article03Open.value = true
+}
+
+function openArticle04() {
+  playOpenBlip()
+  maybePlayRecordOnArticleOpen()
+  clearAmbientTimeouts()
+  article04Open.value = true
+}
+
+function openArticle05() {
+  playOpenBlip()
+  maybePlayRecordOnArticleOpen()
+  clearAmbientTimeouts()
+  article05Open.value = true
+}
+
 // An article's companion windows belong to it, so they shuffle away when the
 // article closes — whether dismissed by hand or read past its close line.
 watch(article01Open, (isOpen) => {
@@ -119,25 +143,42 @@ watch(article02Open, (isOpen) => {
     <HeaderLogos />
     <Canvas>
       <RecordPlayer :left="recordLeft" :top="recordTop" :size="RECORD_SIZE" />
-      <CanvasItem :left="1430" :top="800" :width="480" :src="assetUrl('canvas/collage.png')"
-        alt="Collage of cut paper and printed fragments" badge="2" @click="openArticle02" />
-      <CanvasItem :left="100" :top="810" :width="460" :src="assetUrl('canvas/stencil.png')"
+      <CanvasItem :left="155" :top="1154" :width="550" :badge-offset-y="24"
+        :src="assetUrl('canvas/stencil.png')"
         alt="Lettering stencil sheet" badge="1" @click="openArticle01" />
-      <CanvasItem :left="760" :top="400" :width="420" :rotate="-4" :interactive="false"
-        :src="assetUrl('canvas/pencil.png')" alt="Pencil" />
-      <CanvasItem :left="540" :top="320" :width="62" :rotate="9" :interactive="false"
+      <CanvasItem :left="1806" :top="1088" :width="470" :src="assetUrl('canvas/cutpaper.png')"
+        alt="Scattered fragments of cut paper" badge="4" @click="openArticle04" />
+      <CanvasItem :left="300" :top="300" :width="440" :rotate="-3"
+        :src="assetUrl('canvas/book.png')" alt="Monograph on the work of Ikko Tanaka" badge="2"
+        :badge-offset-y="16" @click="openArticle02" />
+      <CanvasItem :left="878" :top="497" :width="62" :rotate="9" :interactive="false"
         :src="assetUrl('canvas/screwdriver.png')" alt="Screwdriver" />
-      <CanvasItem :left="420" :top="1310" :width="340" :rotate="-5" :interactive="false"
-        :src="assetUrl('canvas/headphones.png')" alt="Headphones" />
-      <CanvasItem :left="850" :top="1320" :width="260" :rotate="3" :interactive="false"
+      <CanvasItem :left="1123" :top="589" :width="880" :rotate="-2"
+        :src="assetUrl('canvas/keyboard.png')" alt="Keyboard" badge="3" @click="openArticle03" />
+      <CanvasItem :left="2040" :top="230" :width="280" :rotate="-30" :interactive="false"
+        :src="assetUrl('canvas/flower.png')" alt="Buttercup on a long stem" />
+      <CanvasItem :left="269" :top="1562" :width="320" :rotate="-6" :interactive="false"
+        :src="assetUrl('canvas/markers.png')" alt="Two packs of coloured markers" />
+      <CanvasItem :left="360" :top="2060" :width="340" :rotate="5" :interactive="false"
+        :src="assetUrl('canvas/chord.png')" alt="Coiled cable" />
+      <CanvasItem :left="852" :top="1723" :width="500" :rotate="3"
+        :src="assetUrl('canvas/rock.png')" alt="Weathered rock" badge="5" @click="openArticle05" />
+      <CanvasItem :left="1232" :top="107" :width="280" :rotate="-5" :interactive="false"
+        :src="assetUrl('canvas/guitarpedal.png')" alt="Chorus and flanger guitar pedal" />
+      <CanvasItem :left="1604" :top="1686" :width="329" :rotate="-4" :interactive="false"
+        :src="assetUrl('canvas/coffee.png')" alt="Cup of coffee" />
+      <CanvasItem :left="1475" :top="2138" :width="263" :rotate="7" :interactive="false"
+        :src="assetUrl('canvas/apple.png')" alt="Green apple" />
+      <CanvasItem :left="2085" :top="1928" :width="300" :rotate="3" :interactive="false"
         :src="assetUrl('canvas/calculator.png')" alt="Calculator" />
-      <CanvasItem :left="1200" :top="1330" :width="240" :rotate="-7" :interactive="false"
+      <CanvasItem :left="832" :top="2252" :width="312" :rotate="-7" :interactive="false"
         :src="assetUrl('canvas/tape.png')" alt="Roll of tape" />
-      <CanvasItem :left="1550" :top="1270" :width="210" :rotate="6" :interactive="false"
-        :src="assetUrl('canvas/mouse.png')" alt="Computer mouse" />
     </Canvas>
     <ArticleWindow v-model:open="article01Open" article-id="article01" />
     <ArticleWindow v-model:open="article02Open" article-id="article02" />
+    <ArticleWindow v-model:open="article03Open" article-id="article03" />
+    <ArticleWindow v-model:open="article04Open" article-id="article04" />
+    <ArticleWindow v-model:open="article05Open" article-id="article05" />
     <AmbientWindow v-model:open="ambient01Open" window-id="ambient01" :src="assetUrl('window-content/ambient01.png')"
       alt="Ambient texture" :width="250" background="var(--color-blue)" side="left"
       caption="A torn strip of newsprint, photographed under warm studio light before the paste dried." />

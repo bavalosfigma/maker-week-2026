@@ -1,5 +1,8 @@
 import article01 from './article01/config.js'
 import article02 from './article02/config.js'
+import article03 from './article03/config.js'
+import article04 from './article04/config.js'
+import article05 from './article05/config.js'
 import './theme.css'
 
 /**
@@ -13,6 +16,9 @@ import './theme.css'
 export const articles = {
   article01,
   article02,
+  article03,
+  article04,
+  article05,
 }
 
 export function getArticle(id) {

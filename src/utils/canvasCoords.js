@@ -1,5 +1,5 @@
-export const CANVAS_SIZE = 2000
-export const DESIGN_SIZE = 2400
+export const CANVAS_SIZE = 2600
+export const DESIGN_SIZE = 3120
 export const CANVAS_SCALE = CANVAS_SIZE / DESIGN_SIZE
 
 export const COORDINATE_MODES = {

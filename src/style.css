@@ -129,8 +129,7 @@ body {
 }
 
 .image-treatment {
-  mix-blend-mode: multiply;
-  filter: grayscale(1) brightness(1) contrast(0.9) url('#duotone') url('#grain');
+  filter: url('#grain');
 }
 
 .image-grain {

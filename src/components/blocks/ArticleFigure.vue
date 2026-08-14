@@ -1,7 +1,8 @@
 <script setup>
+import { computed } from 'vue'
 import { assetUrl } from '../../utils/assetUrl.js'
 
-defineProps({
+const props = defineProps({
   layout: {
     type: String,
     default: 'full',
@@ -15,6 +16,18 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  // Vertical offset between two-up columns. Bottom uses the full value;
+  // center uses half. Override per figure when a pair needs more or less air.
+  stagger: {
+    type: Number,
+    default: null,
+  },
+})
+
+const figureStyle = computed(() => {
+  if (props.stagger == null) return undefined
+
+  return { '--figure-stagger': `${props.stagger}px` }
 })
 
 function imageUrl(src) {
@@ -22,7 +35,12 @@ function imageUrl(src) {
     return src
   }
 
-  return assetUrl(src)
+  const encoded = src
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
+  return assetUrl(encoded)
 }
 
 function imageAlignment(align) {
@@ -34,6 +52,7 @@ function imageAlignment(align) {
   <div
     class="article-figure"
     :class="`article-figure--${layout}`"
+    :style="figureStyle"
   >
     <figure
       v-for="(image, index) in images"
@@ -81,7 +100,7 @@ function imageAlignment(align) {
 }
 
 .article-figure--two-up {
-  --figure-stagger: clamp(1.5rem, 5vw, 3.5rem);
+  --figure-stagger: clamp(2rem, 7vw, 6.25rem);
 
   width: 100%;
   display: grid;
@@ -104,7 +123,7 @@ function imageAlignment(align) {
   }
 
   .article-figure--two-up {
-    --figure-stagger: 1.5rem;
+    --figure-stagger: 2.5rem;
   }
 }
 </style>

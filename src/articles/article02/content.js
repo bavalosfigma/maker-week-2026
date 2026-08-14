@@ -26,9 +26,9 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'window-content/coritakent.png',
-        alt: 'Placeholder image: Corita Kent holding a camera to her eye',
-        caption: 'Fig. 01 — Placeholder. Looking harder at what is already in front of you.',
+        src: 'article-images/coritakent.png',
+        alt: 'Corita Kent holding a camera to her eye',
+        caption: 'Fig. 01 — Corita Kent, finding the frame before the print.',
       },
     ],
   },
@@ -41,15 +41,15 @@ export default [
     layout: 'two-up',
     images: [
       {
-        src: 'window-content/plant.png',
-        alt: 'Placeholder image: a sansevieria photographed from above',
-        caption: 'Fig. 02 — Placeholder. An ordinary object, catalogued.',
+        src: 'article-images/miro-book.jpg',
+        alt: 'Open book showing Joan Miró reproductions and color plates',
+        caption: 'Fig. 02 — Research filed as image: Miró, dog-eared and borrowed.',
         align: 'top',
       },
       {
-        src: 'window-content/ambient01.png',
-        alt: 'Placeholder image: a marigold photographed at close range, out of focus',
-        caption: 'Fig. 03 — Placeholder. The same object, held closer.',
+        src: 'article-images/phone.jpg',
+        alt: 'Mobile phone screen showing a reference photograph',
+        caption: 'Fig. 03 — The same reference, pocketed between errands.',
         align: 'center',
       },
     ],
@@ -63,9 +63,9 @@ export default [
     layout: 'full',
     images: [
       {
-        src: 'window-content/ambient02.png',
-        alt: 'Placeholder image: overlapping brush strokes in high contrast',
-        caption: 'Fig. 04 — Placeholder. Sources shown, not hidden.',
+        src: 'article-images/poster 02.webp',
+        alt: 'Large-format poster with layered graphic forms and saturated color',
+        caption: 'Fig. 04 — Sources shown at full scale, not hidden in a folder.',
       },
     ],
   },
