@@ -146,33 +146,34 @@ watch(article02Open, (isOpen) => {
       <CanvasItem :left="155" :top="1154" :width="550" :badge-offset-y="24"
         :src="assetUrl('canvas/stencil.png')"
         alt="Lettering stencil sheet" badge="1" @click="openArticle01" />
-      <CanvasItem :left="1806" :top="1088" :width="470" :src="assetUrl('canvas/cutpaper.png')"
+      <CanvasItem :left="1806" :top="1088" :width="470" :badge-offset-x="32" :badge-offset-y="-32"
+        :src="assetUrl('canvas/cutpaper.png')"
         alt="Scattered fragments of cut paper" badge="4" @click="openArticle04" />
       <CanvasItem :left="137" :top="351" :width="440" :rotate="-3"
         :src="assetUrl('canvas/book.png')" alt="Monograph on the work of Ikko Tanaka" badge="2"
         :badge-offset-y="16" @click="openArticle02" />
-      <CanvasItem :left="878" :top="497" :width="62" :rotate="9" :interactive="false"
+      <CanvasItem :left="846" :top="497" :width="62" :rotate="9" :interactive="false"
         :src="assetUrl('canvas/screwdriver.png')" alt="Screwdriver" />
-      <CanvasItem :left="1123" :top="589" :width="880" :rotate="-2"
+      <CanvasItem :left="1123" :top="589" :width="880" :rotate="-2" :badge-offset-y="24"
         :src="assetUrl('canvas/keyboard.png')" alt="Keyboard" badge="3" @click="openArticle03" />
       <CanvasItem :left="2040" :top="230" :width="280" :rotate="-30" :interactive="false"
         :src="assetUrl('canvas/flower.png')" alt="Buttercup on a long stem" />
       <CanvasItem :left="269" :top="1562" :width="320" :rotate="-6" :interactive="false"
         :src="assetUrl('canvas/markers.png')" alt="Two packs of coloured markers" />
-      <CanvasItem :left="228" :top="2093" :width="340" :rotate="5" :interactive="false"
+      <CanvasItem :left="148" :top="2093" :width="340" :rotate="5" :interactive="false"
         :src="assetUrl('canvas/chord.png')" alt="Coiled cable" />
-      <CanvasItem :left="852" :top="1723" :width="500" :rotate="3"
-        :src="assetUrl('canvas/rock.png')" alt="Weathered rock" badge="5" :badge-offset-x="32"
-        :badge-offset-y="-32" @click="openArticle05" />
+      <CanvasItem :left="2070" :top="1889" :width="500" :rotate="3" :interactive="false"
+        :src="assetUrl('canvas/rock.png')" alt="Weathered rock" />
       <CanvasItem :left="1232" :top="107" :width="280" :rotate="-5" :interactive="false"
         :src="assetUrl('canvas/guitarpedal.png')" alt="Chorus and flanger guitar pedal" />
       <CanvasItem :left="1604" :top="1686" :width="329" :rotate="-4" :interactive="false"
         :src="assetUrl('canvas/coffee.png')" alt="Cup of coffee" />
-      <CanvasItem :left="1475" :top="2138" :width="263" :rotate="7" :interactive="false"
+      <CanvasItem :left="1492" :top="2174" :width="263" :rotate="7" :interactive="false"
         :src="assetUrl('canvas/apple.png')" alt="Green apple" />
-      <CanvasItem :left="2085" :top="1928" :width="300" :rotate="3" :interactive="false"
-        :src="assetUrl('canvas/calculator.png')" alt="Calculator" />
-      <CanvasItem :left="832" :top="2252" :width="312" :rotate="-7" :interactive="false"
+      <CanvasItem :left="900" :top="1662" :width="330" :rotate="-60"
+        :src="assetUrl('canvas/calculator.png')" alt="Clear Game Boy" badge="5"
+        :badge-offset-x="48" :badge-offset-y="-98" @click="openArticle05" />
+      <CanvasItem :left="691" :top="2219" :width="312" :rotate="-7" :interactive="false"
         :src="assetUrl('canvas/tape.png')" alt="Roll of tape" />
     </Canvas>
     <ArticleWindow v-model:open="article01Open" article-id="article01" />

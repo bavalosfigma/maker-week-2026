@@ -13,7 +13,7 @@
     }"
     @click="onClick"
   >
-    <div v-if="src" class="canvas-item__frame">
+    <div v-if="src" class="canvas-item__frame" :style="frameStyle">
       <img
         :src="src"
         :alt="alt"
@@ -112,6 +112,11 @@ const croppedLayout = computed(() => {
 
 const imageStyle = computed(() => croppedLayout.value?.imageStyle)
 
+/* Rotating the frame instead of the item keeps the badge upright. */
+const frameStyle = computed(() => (
+  props.rotate ? { transform: `rotate(${props.rotate}deg)` } : undefined
+))
+
 const positionStyle = computed(() => {
   const size = croppedLayout.value
     ? {
@@ -123,21 +128,11 @@ const positionStyle = computed(() => {
         height: props.height ? `${props.height}px` : undefined,
       }
 
-  const transforms = []
-  if (props.centerX != null && props.centerY != null) {
-    transforms.push('translate(-50%, -50%)')
-  }
-  if (props.rotate) {
-    transforms.push(`rotate(${props.rotate}deg)`)
-  }
-
-  const transform = transforms.length ? transforms.join(' ') : undefined
-
   if (props.centerX != null && props.centerY != null) {
     return {
       left: `${props.centerX}px`,
       top: `${props.centerY}px`,
-      transform,
+      transform: 'translate(-50%, -50%)',
       ...size,
     }
   }
@@ -145,7 +140,6 @@ const positionStyle = computed(() => {
   return {
     left: `${props.left}px`,
     top: `${props.top}px`,
-    transform,
     ...size,
   }
 })

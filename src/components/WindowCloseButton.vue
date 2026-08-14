@@ -19,7 +19,7 @@ defineEmits(['click'])
   padding: 0;
   border: 0px solid #000;
   border-radius: 50%;
-  background: #fff;
+  background: var(--color-gray);
   cursor: pointer;
   outline: none;
 }

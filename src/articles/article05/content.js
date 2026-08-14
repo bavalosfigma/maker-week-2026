@@ -7,7 +7,7 @@ import section6 from './blocks/06-start-tonight.js'
 export default [
   {
     type: 'header',
-    eyebrow: '5',
+    eyebrow: '4',
     title: 'Making space',
   },
   {
