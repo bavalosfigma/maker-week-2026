@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, reactive, watch } from 'vue'
 import AmbientWindow from './components/AmbientWindow.vue'
 import ArticleWindow from './components/ArticleWindow.vue'
 import Canvas from './components/Canvas.vue'
@@ -11,6 +11,7 @@ import { useAppPreloader } from './composables/useAppPreloader.js'
 import { provideWindowStack } from './composables/useWindowStack.js'
 import { playOpenBlip } from './composables/useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
+import { AMBIENT_WINDOWS, ARTICLE_IDS } from './articles/ambientWindows.js'
 import { assetUrl } from './utils/assetUrl.js'
 import { CANVAS_SIZE } from './utils/canvasCoords.js'
 import { getCroppedLayout, getImageCrop } from './utils/imageCrops.js'
@@ -25,28 +26,18 @@ const recordLayout = getCroppedLayout(recordCrop, RECORD_SIZE)
 const recordLeft = CANVAS_CENTER - recordLayout.containerWidth / 2
 const recordTop = CANVAS_CENTER - recordLayout.containerHeight / 2
 
-const article01Open = ref(false)
-const article02Open = ref(false)
-const article03Open = ref(false)
-const article04Open = ref(false)
-const article05Open = ref(false)
-const ambient01Open = ref(false)
-const ambient02Open = ref(false)
-const ambient03Open = ref(false)
-const animation01Open = ref(false)
+const articleOpen = reactive(
+  Object.fromEntries(ARTICLE_IDS.map((articleId) => [articleId, false])),
+)
+
+const ambientOpen = reactive(
+  Object.fromEntries(
+    Object.values(AMBIENT_WINDOWS).flat().map((ambient) => [ambient.id, false]),
+  ),
+)
 
 const AMBIENT_STAGGER_MS = 200
 const ambientTimeouts = []
-
-const article01Ambients = [
-  { windowId: 'ambient01', openRef: ambient01Open },
-  { windowId: 'ambient02', openRef: ambient02Open },
-]
-
-const article02Ambients = [
-  { windowId: 'ambient03', openRef: ambient03Open },
-  { windowId: 'animation01', openRef: animation01Open },
-]
 
 function clearAmbientTimeouts() {
   for (const timeoutId of ambientTimeouts) {
@@ -57,12 +48,12 @@ function clearAmbientTimeouts() {
 }
 
 function staggerAmbientOpens(entries) {
-  entries.forEach(({ windowId, openRef }, index) => {
+  entries.forEach((ambient, index) => {
     const timeoutId = window.setTimeout(() => {
-      openRef.value = true
+      ambientOpen[ambient.id] = true
 
       nextTick(() => {
-        windowStack.bringToFront(windowId)
+        windowStack.bringToFront(ambient.id)
       })
     }, AMBIENT_STAGGER_MS * (index + 1))
 
@@ -71,69 +62,34 @@ function staggerAmbientOpens(entries) {
 }
 
 function staggerAmbientCloses(entries) {
-  entries.forEach(({ openRef }, index) => {
+  entries.forEach((ambient, index) => {
     const timeoutId = window.setTimeout(() => {
-      openRef.value = false
+      ambientOpen[ambient.id] = false
     }, AMBIENT_STAGGER_MS * index)
 
     ambientTimeouts.push(timeoutId)
   })
 }
 
-function openArticle01() {
+function openArticle(articleId) {
   playOpenBlip()
   maybePlayRecordOnArticleOpen()
   clearAmbientTimeouts()
-  article01Open.value = true
+  articleOpen[articleId] = true
 
-  staggerAmbientOpens(article01Ambients)
-}
-
-function openArticle02() {
-  playOpenBlip()
-  maybePlayRecordOnArticleOpen()
-  clearAmbientTimeouts()
-  article02Open.value = true
-
-  staggerAmbientOpens(article02Ambients)
-}
-
-function openArticle03() {
-  playOpenBlip()
-  maybePlayRecordOnArticleOpen()
-  clearAmbientTimeouts()
-  article03Open.value = true
-}
-
-function openArticle04() {
-  playOpenBlip()
-  maybePlayRecordOnArticleOpen()
-  clearAmbientTimeouts()
-  article04Open.value = true
-}
-
-function openArticle05() {
-  playOpenBlip()
-  maybePlayRecordOnArticleOpen()
-  clearAmbientTimeouts()
-  article05Open.value = true
+  staggerAmbientOpens(AMBIENT_WINDOWS[articleId])
 }
 
 // An article's companion windows belong to it, so they shuffle away when the
 // article closes — whether dismissed by hand or read past its close line.
-watch(article01Open, (isOpen) => {
-  if (isOpen) return
+for (const articleId of ARTICLE_IDS) {
+  watch(() => articleOpen[articleId], (isOpen) => {
+    if (isOpen) return
 
-  clearAmbientTimeouts()
-  staggerAmbientCloses(article01Ambients)
-})
-
-watch(article02Open, (isOpen) => {
-  if (isOpen) return
-
-  clearAmbientTimeouts()
-  staggerAmbientCloses(article02Ambients)
-})
+    clearAmbientTimeouts()
+    staggerAmbientCloses(AMBIENT_WINDOWS[articleId])
+  })
+}
 </script>
 
 <template>
@@ -145,17 +101,17 @@ watch(article02Open, (isOpen) => {
       <RecordPlayer :left="recordLeft" :top="recordTop" :size="RECORD_SIZE" />
       <CanvasItem :left="155" :top="1154" :width="550" :badge-offset-y="24"
         :src="assetUrl('canvas/stencil.png')"
-        alt="Lettering stencil sheet" badge="1" @click="openArticle01" />
+        alt="Lettering stencil sheet" badge="1" @click="openArticle('article01')" />
       <CanvasItem :left="1806" :top="1088" :width="470" :badge-offset-x="32" :badge-offset-y="-32"
         :src="assetUrl('canvas/cutpaper.png')"
-        alt="Scattered fragments of cut paper" badge="4" @click="openArticle04" />
+        alt="Scattered fragments of cut paper" badge="4" @click="openArticle('article04')" />
       <CanvasItem :left="137" :top="351" :width="440" :rotate="-3"
         :src="assetUrl('canvas/book.png')" alt="Monograph on the work of Ikko Tanaka" badge="2"
-        :badge-offset-y="16" @click="openArticle02" />
+        :badge-offset-y="16" @click="openArticle('article02')" />
       <CanvasItem :left="846" :top="497" :width="62" :rotate="9" :interactive="false"
         :src="assetUrl('canvas/screwdriver.png')" alt="Screwdriver" />
       <CanvasItem :left="1123" :top="589" :width="880" :rotate="-2" :badge-offset-y="24"
-        :src="assetUrl('canvas/keyboard.png')" alt="Keyboard" badge="3" @click="openArticle03" />
+        :src="assetUrl('canvas/keyboard.png')" alt="Keyboard" badge="3" @click="openArticle('article03')" />
       <CanvasItem :left="2040" :top="230" :width="280" :rotate="-30" :interactive="false"
         :src="assetUrl('canvas/flower.png')" alt="Buttercup on a long stem" />
       <CanvasItem :left="269" :top="1562" :width="320" :rotate="-6" :interactive="false"
@@ -172,26 +128,15 @@ watch(article02Open, (isOpen) => {
         :src="assetUrl('canvas/apple.png')" alt="Green apple" />
       <CanvasItem :left="900" :top="1662" :width="330" :rotate="-60"
         :src="assetUrl('canvas/calculator.png')" alt="Clear Game Boy" badge="5"
-        :badge-offset-x="48" :badge-offset-y="-98" @click="openArticle05" />
+        :badge-offset-x="48" :badge-offset-y="-98" @click="openArticle('article05')" />
       <CanvasItem :left="691" :top="2219" :width="312" :rotate="-7" :interactive="false"
         :src="assetUrl('canvas/tape.png')" alt="Roll of tape" />
     </Canvas>
-    <ArticleWindow v-model:open="article01Open" article-id="article01" />
-    <ArticleWindow v-model:open="article02Open" article-id="article02" />
-    <ArticleWindow v-model:open="article03Open" article-id="article03" />
-    <ArticleWindow v-model:open="article04Open" article-id="article04" />
-    <ArticleWindow v-model:open="article05Open" article-id="article05" />
-    <AmbientWindow v-model:open="ambient01Open" window-id="ambient01" :src="assetUrl('window-content/ambient01.png')"
-      alt="Ambient texture" :width="250" background="var(--color-blue)" side="left"
-      caption="A torn strip of newsprint, photographed under warm studio light before the paste dried." />
-    <AmbientWindow v-model:open="ambient02Open" window-id="ambient02" :src="assetUrl('window-content/ambient02.png')"
-      alt="Ambient texture 02" :width="380" background="var(--color-orange)" side="right"
-      caption="Study no. 12 — overlapping halftones, printed twice on purpose." />
-    <AmbientWindow v-model:open="ambient03Open" window-id="ambient03" :src="assetUrl('window-content/ambient03.png')"
-      alt="Ambient texture 03" :width="320" background="var(--color-yellow)" side="left"
-      caption="Found on a workshop floor: a sheet that had been cut, kept, and cut again." />
-    <AmbientWindow v-model:open="animation01Open" window-id="animation01" :src="assetUrl('window-content/animation01.mp4')"
-      alt="Animation 01" :width="250" background="var(--color-blue)" side="right"
-      caption="Loop test, 24 frames. The mistake in frame nine is the reason we kept it." video />
+    <ArticleWindow v-for="articleId in ARTICLE_IDS" :key="articleId"
+      v-model:open="articleOpen[articleId]" :article-id="articleId" />
+    <template v-for="(ambients, articleId) in AMBIENT_WINDOWS" :key="articleId">
+      <AmbientWindow v-for="ambient in ambients" :key="ambient.id" v-model:open="ambientOpen[ambient.id]"
+        :window-id="ambient.id" :src="assetUrl(ambient.src)" :alt="ambient.alt" :width="ambient.width"
+        :side="ambient.side" :caption="ambient.caption" :video="!!ambient.video" /></template>
   </div>
 </template>

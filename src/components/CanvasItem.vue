@@ -4,6 +4,7 @@
     :class="{
       'canvas-item--no-hover': !hover || !interactive,
       'canvas-item--decorative': !interactive,
+      'canvas-item--numbered': badge != null,
       'canvas-item--cropped': !!croppedLayout,
     }"
     :style="{
@@ -199,7 +200,7 @@ const positionStyle = computed(() => {
 }
 
 /* Hovering the object fills its numeral in, dropping the outline. */
-.canvas-item:not(.canvas-item--decorative):hover .canvas-item__badge {
+.canvas-item--numbered:hover .canvas-item__badge {
   border-color: transparent;
   background: var(--color-yellow);
 }

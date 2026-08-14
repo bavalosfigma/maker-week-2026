@@ -54,7 +54,7 @@ body {
   z-index: 10;
 }
 
-.canvas-surface:has(.canvas-item:not(.canvas-item--decorative):hover) .canvas-item:not(:hover) {
+.canvas-surface:has(.canvas-item--numbered:hover) .canvas-item:not(:hover) {
   opacity: 0.18;
 }
 
