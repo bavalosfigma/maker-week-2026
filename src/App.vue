@@ -162,7 +162,7 @@ watch(article02Open, (isOpen) => {
         :src="assetUrl('canvas/markers.png')" alt="Two packs of coloured markers" />
       <CanvasItem :left="148" :top="2093" :width="340" :rotate="5" :interactive="false"
         :src="assetUrl('canvas/chord.png')" alt="Coiled cable" />
-      <CanvasItem :left="2070" :top="1889" :width="500" :rotate="3" :interactive="false"
+      <CanvasItem :left="2002" :top="1951" :width="500" :rotate="3" :interactive="false"
         :src="assetUrl('canvas/rock.png')" alt="Weathered rock" />
       <CanvasItem :left="1232" :top="107" :width="280" :rotate="3" :interactive="false"
         :src="assetUrl('canvas/guitarpedal.png')" alt="Chorus and flanger guitar pedal" />
