@@ -148,7 +148,7 @@ watch(article02Open, (isOpen) => {
         alt="Lettering stencil sheet" badge="1" @click="openArticle01" />
       <CanvasItem :left="1806" :top="1088" :width="470" :src="assetUrl('canvas/cutpaper.png')"
         alt="Scattered fragments of cut paper" badge="4" @click="openArticle04" />
-      <CanvasItem :left="300" :top="300" :width="440" :rotate="-3"
+      <CanvasItem :left="137" :top="351" :width="440" :rotate="-3"
         :src="assetUrl('canvas/book.png')" alt="Monograph on the work of Ikko Tanaka" badge="2"
         :badge-offset-y="16" @click="openArticle02" />
       <CanvasItem :left="878" :top="497" :width="62" :rotate="9" :interactive="false"
@@ -159,7 +159,7 @@ watch(article02Open, (isOpen) => {
         :src="assetUrl('canvas/flower.png')" alt="Buttercup on a long stem" />
       <CanvasItem :left="269" :top="1562" :width="320" :rotate="-6" :interactive="false"
         :src="assetUrl('canvas/markers.png')" alt="Two packs of coloured markers" />
-      <CanvasItem :left="360" :top="2060" :width="340" :rotate="5" :interactive="false"
+      <CanvasItem :left="228" :top="2093" :width="340" :rotate="5" :interactive="false"
         :src="assetUrl('canvas/chord.png')" alt="Coiled cable" />
       <CanvasItem :left="852" :top="1723" :width="500" :rotate="3"
         :src="assetUrl('canvas/rock.png')" alt="Weathered rock" badge="5" :badge-offset-x="32"
