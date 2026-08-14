@@ -8,6 +8,7 @@
     }"
     :style="{
       ...positionStyle,
+      '--badge-offset-x': `${badgeOffsetX}px`,
       '--badge-offset-y': `${badgeOffsetY}px`,
     }"
     @click="onClick"
@@ -70,6 +71,10 @@ const props = defineProps({
   badge: {
     type: [String, Number],
     default: null,
+  },
+  badgeOffsetX: {
+    type: Number,
+    default: 0,
   },
   badgeOffsetY: {
     type: Number,
@@ -184,7 +189,7 @@ const positionStyle = computed(() => {
 .canvas-item__badge {
   position: absolute;
   top: calc(100% + 8px + var(--badge-offset-y, 0px));
-  left: 0;
+  left: var(--badge-offset-x, 0px);
   display: inline-flex;
   align-items: center;
   justify-content: center;

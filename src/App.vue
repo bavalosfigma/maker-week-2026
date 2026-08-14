@@ -162,7 +162,8 @@ watch(article02Open, (isOpen) => {
       <CanvasItem :left="360" :top="2060" :width="340" :rotate="5" :interactive="false"
         :src="assetUrl('canvas/chord.png')" alt="Coiled cable" />
       <CanvasItem :left="852" :top="1723" :width="500" :rotate="3"
-        :src="assetUrl('canvas/rock.png')" alt="Weathered rock" badge="5" @click="openArticle05" />
+        :src="assetUrl('canvas/rock.png')" alt="Weathered rock" badge="5" :badge-offset-x="32"
+        :badge-offset-y="-32" @click="openArticle05" />
       <CanvasItem :left="1232" :top="107" :width="280" :rotate="-5" :interactive="false"
         :src="assetUrl('canvas/guitarpedal.png')" alt="Chorus and flanger guitar pedal" />
       <CanvasItem :left="1604" :top="1686" :width="329" :rotate="-4" :interactive="false"
