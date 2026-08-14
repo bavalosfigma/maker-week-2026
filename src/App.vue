@@ -120,9 +120,9 @@ watch(article02Open, (isOpen) => {
     <Canvas>
       <RecordPlayer :left="recordLeft" :top="recordTop" :size="RECORD_SIZE" />
       <CanvasItem :left="1430" :top="800" :width="480" :src="assetUrl('canvas/collage.png')"
-        alt="Collage of cut paper and printed fragments" @click="openArticle01" />
+        alt="Collage of cut paper and printed fragments" badge="2" @click="openArticle02" />
       <CanvasItem :left="100" :top="810" :width="460" :src="assetUrl('canvas/stencil.png')"
-        alt="Lettering stencil sheet" @click="openArticle02" />
+        alt="Lettering stencil sheet" badge="1" @click="openArticle01" />
       <CanvasItem :left="760" :top="400" :width="420" :rotate="-4" :interactive="false"
         :src="assetUrl('canvas/pencil.png')" alt="Pencil" />
       <CanvasItem :left="540" :top="320" :width="62" :rotate="9" :interactive="false"

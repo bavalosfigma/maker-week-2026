@@ -18,6 +18,7 @@
       :style="imageStyle"
     >
     <slot v-else />
+    <span v-if="badge" class="canvas-item__badge type-h3" aria-hidden="true">{{ badge }}</span>
   </div>
 </template>
 
@@ -57,6 +58,10 @@ const props = defineProps({
   alt: {
     type: String,
     default: '',
+  },
+  badge: {
+    type: [String, Number],
+    default: null,
   },
   hover: {
     type: Boolean,
@@ -156,5 +161,29 @@ const positionStyle = computed(() => {
 
 .canvas-item__image--auto-height {
   height: auto;
+}
+
+.canvas-item__badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--color-black);
+  border-radius: 50%;
+  line-height: 1;
+  pointer-events: none;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out;
+}
+
+/* Hovering the object fills its numeral in, dropping the outline. */
+.canvas-item:not(.canvas-item--decorative):hover .canvas-item__badge {
+  border-color: transparent;
+  background: var(--color-yellow);
 }
 </style>
