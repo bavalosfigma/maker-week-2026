@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { assetUrl } from '../utils/assetUrl.js'
+import { playSwitchFlip } from './useBlipSound.js'
 
 export const recordIsPaused = ref(true)
 export const recordIsPlaying = ref(false)
@@ -51,6 +52,7 @@ export function maybePlayRecordOnArticleOpen() {
 
 export function toggleRecordPlayback() {
   userControlsPlayback = true
+  playSwitchFlip()
 
   if (recordIsPaused.value) {
     playRecord()

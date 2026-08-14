@@ -102,7 +102,7 @@ for (const articleId of ARTICLE_IDS) {
       <CanvasItem :left="155" :top="1154" :width="550" :badge-offset-y="24"
         :src="assetUrl('canvas/stencil.png')"
         alt="Lettering stencil sheet" badge="1" @click="openArticle('article01')" />
-      <CanvasItem :left="1806" :top="1088" :width="470" :badge-offset-x="32" :badge-offset-y="-32"
+      <CanvasItem :left="1806" :top="1088" :width="570" :badge-offset-x="32" :badge-offset-y="-32"
         :src="assetUrl('canvas/cutpaper.png')"
         alt="Scattered fragments of cut paper" badge="4" @click="openArticle('article04')" />
       <CanvasItem :left="137" :top="351" :width="440" :rotate="-3"

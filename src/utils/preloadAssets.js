@@ -1,7 +1,8 @@
 import { assetUrl } from './assetUrl.js'
 
 export const APP_IMAGE_ASSETS = [
-  'canvas/record.png',
+  'canvas/record-deck.png',
+  'canvas/record-arm.png',
   'canvas/record-switch-on.png',
   'canvas/record-switch-off.png',
   'canvas/vinyl.png',

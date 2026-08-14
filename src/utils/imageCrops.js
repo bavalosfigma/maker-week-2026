@@ -79,6 +79,11 @@ export const IMAGE_CROPS = {
     imageHeight: 1003,
     crop: { left: 215, top: 57, width: 1134, height: 864 },
   },
+  'record-deck.png': {
+    imageWidth: 1568,
+    imageHeight: 1003,
+    crop: { left: 215, top: 57, width: 1134, height: 864 },
+  },
   'vinyl.png': {
     imageWidth: 1024,
     imageHeight: 1024,

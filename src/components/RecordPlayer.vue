@@ -6,7 +6,7 @@
   >
     <img
       class="record-player__base"
-      :src="assetUrl('canvas/record.png')"
+      :src="assetUrl('canvas/record-deck.png')"
       alt="Record player"
       :style="croppedLayout.imageStyle"
     >
@@ -16,10 +16,16 @@
         alt="Vinyl record"
       >
     </div>
+    <img
+      class="record-player__arm"
+      :src="assetUrl('canvas/record-arm.png')"
+      alt=""
+      aria-hidden="true"
+    >
     <span class="record-player__led" aria-hidden="true" />
     <img
       class="record-player__rocker"
-      :src="assetUrl(recordIsPlaying ? 'canvas/record-switch-on.png' : 'canvas/record-switch-off.png')"
+      :src="assetUrl(recordIsPlaying ? 'canvas/record-switch-off.png' : 'canvas/record-switch-on.png')"
       alt=""
       aria-hidden="true"
     >
@@ -54,7 +60,7 @@ const props = defineProps({
   },
 })
 
-const recordCrop = getImageCrop('canvas/record.png')
+const recordCrop = getImageCrop('canvas/record-deck.png')
 
 const croppedLayout = computed(() => getCroppedLayout(recordCrop, props.size))
 
@@ -106,6 +112,30 @@ const containerStyle = computed(() => ({
 
 .record-player--playing .record-player__vinyl img {
   animation-play-state: running;
+}
+
+/*
+ * record-arm.png is the tonearm cut out of the deck photo, and record-deck.png
+ * is that photo with the arm painted out. At rest the cutout lands back exactly
+ * where it came from; the origin is the bearing it pivots on.
+ */
+.record-player__arm {
+  position: absolute;
+  left: 80.335%;
+  top: 3.935%;
+  width: 16.402%;
+  height: 90.046%;
+  display: block;
+  transform-origin: 39.247% 21.979%;
+  transform: rotate(0deg);
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 28%));
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.record-player--playing .record-player__arm {
+  transform: rotate(27deg);
 }
 
 /* Sits exactly over the rocker in the photo, so the paddle reads as flipped. */
