@@ -3,15 +3,8 @@ defineEmits(['click'])
 </script>
 
 <template>
-  <button
-    type="button"
-    class="window-close"
-    @click="$emit('click', $event)"
-  >
-    <span
-      class="window-close__icon"
-      aria-hidden="true"
-    />
+  <button type="button" class="window-close" @click="$emit('click', $event)">
+    <span class="window-close__icon" aria-hidden="true" />
   </button>
 </template>
 
@@ -25,6 +18,7 @@ defineEmits(['click'])
   height: 20px;
   padding: 0;
   border: 0px solid #000;
+  border-radius: 50%;
   background: #fff;
   cursor: pointer;
   outline: none;
