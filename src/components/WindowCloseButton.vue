@@ -14,11 +14,12 @@ defineEmits(['click'])
   top: 4px;
   right: 4px;
   z-index: 2;
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 0px solid #000;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--color-gray);
   cursor: pointer;
   outline: none;
@@ -42,7 +43,7 @@ defineEmits(['click'])
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 16px;
+  width: 32px;
   height: 1px;
   background: #000;
   transform-origin: center;

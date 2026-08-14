@@ -178,6 +178,7 @@ onUnmounted(() => {
 
 .article-panel__content {
   flex: 1;
+  margin-top: 32px;
 }
 
 .article-panel :deep(.window-close) {
