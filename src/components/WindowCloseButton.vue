@@ -35,6 +35,14 @@ defineEmits(['click'])
   display: block;
   width: 100%;
   height: 100%;
+  transform: rotate(0deg);
+  transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@media (hover: hover) {
+  .window-close:hover .window-close__icon {
+    transform: rotate(90deg);
+  }
 }
 
 .window-close__icon::before,
