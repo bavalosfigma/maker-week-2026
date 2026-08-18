@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { assetUrl } from '../../utils/assetUrl.js'
+import { encodedAssetUrl } from '../../utils/assetUrl.js'
 
 const props = defineProps({
   layout: {
@@ -30,19 +30,6 @@ const figureStyle = computed(() => {
   return { '--figure-stagger': `${props.stagger}px` }
 })
 
-function imageUrl(src) {
-  if (/^(?:[a-z]+:)?\/\//i.test(src) || /^(?:data|blob):/i.test(src)) {
-    return src
-  }
-
-  const encoded = src
-    .split('/')
-    .map((segment) => encodeURIComponent(segment))
-    .join('/')
-
-  return assetUrl(encoded)
-}
-
 function imageAlignment(align) {
   return ['top', 'center', 'bottom'].includes(align) ? align : 'top'
 }
@@ -63,7 +50,7 @@ function imageAlignment(align) {
       <img
         class="article-figure__image"
         :class="{ 'image-treatment': duotone }"
-        :src="imageUrl(image.src)"
+        :src="encodedAssetUrl(image.src)"
         :alt="image.alt || ''"
         loading="lazy"
         decoding="async"

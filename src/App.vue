@@ -12,7 +12,7 @@ import { provideWindowStack } from './composables/useWindowStack.js'
 import { playOpenBlip } from './composables/useBlipSound.js'
 import { maybePlayRecordOnArticleOpen } from './composables/useRecordAudio.js'
 import { AMBIENT_WINDOWS, ARTICLE_IDS } from './articles/ambientWindows.js'
-import { assetUrl } from './utils/assetUrl.js'
+import { assetUrl, encodedAssetUrl } from './utils/assetUrl.js'
 import { CANVAS_SIZE } from './utils/canvasCoords.js'
 import { getCroppedLayout, getImageCrop } from './utils/imageCrops.js'
 
@@ -136,7 +136,7 @@ for (const articleId of ARTICLE_IDS) {
       v-model:open="articleOpen[articleId]" :article-id="articleId" />
     <template v-for="(ambients, articleId) in AMBIENT_WINDOWS" :key="articleId">
       <AmbientWindow v-for="ambient in ambients" :key="ambient.id" v-model:open="ambientOpen[ambient.id]"
-        :window-id="ambient.id" :src="assetUrl(ambient.src)" :alt="ambient.alt" :width="ambient.width"
+        :window-id="ambient.id" :src="encodedAssetUrl(ambient.src)" :alt="ambient.alt" :width="ambient.width"
         :side="ambient.side" :caption="ambient.caption" :video="!!ambient.video" /></template>
   </div>
 </template>

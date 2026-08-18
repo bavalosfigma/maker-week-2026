@@ -1,4 +1,6 @@
-import { assetUrl } from './assetUrl.js'
+import { AMBIENT_WINDOWS } from '../articles/ambientWindows.js'
+import { articles } from '../articles/index.js'
+import { assetUrl, encodedAssetUrl } from './assetUrl.js'
 
 export const APP_IMAGE_ASSETS = [
   'canvas/record-deck.png',
@@ -22,18 +24,37 @@ export const APP_IMAGE_ASSETS = [
   'canvas/chord.png',
 ]
 
-function preloadImage(path) {
+/* Everything an article puts on screen: its figures, plus the stills in the
+ * companion windows that fly in beside it. */
+export function getArticleImageAssets() {
+  const figures = Object.values(articles).flatMap((article) => (
+    article.blocks.flatMap((block) => block.images?.map((image) => image.src) ?? [])
+  ))
+
+  const ambient = Object.values(AMBIENT_WINDOWS)
+    .flat()
+    .filter((ambient) => !ambient.video)
+    .map((ambient) => ambient.src)
+
+  return [...new Set([...figures, ...ambient])]
+}
+
+function preloadUrl(url) {
   return new Promise((resolve) => {
     const image = new Image()
-    image.onload = () => resolve(path)
-    image.onerror = () => resolve(path)
-    image.src = assetUrl(path)
+    image.onload = () => resolve(url)
+    image.onerror = () => resolve(url)
+    image.src = url
   })
 }
 
 export function preloadAppAssets(imagePaths = APP_IMAGE_ASSETS) {
   return Promise.all([
     document.fonts.ready,
-    ...imagePaths.map(preloadImage),
+    ...imagePaths.map((path) => preloadUrl(assetUrl(path))),
   ])
+}
+
+export function preloadArticleAssets(imagePaths = getArticleImageAssets()) {
+  return Promise.all(imagePaths.map((src) => preloadUrl(encodedAssetUrl(src))))
 }
